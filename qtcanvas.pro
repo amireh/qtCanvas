@@ -1,0 +1,44 @@
+#-------------------------------------------------
+#
+# Project created by QtCreator 2013-12-11T12:03:16
+#
+#-------------------------------------------------
+
+QT       += core gui
+QMAKE_CXXFLAGS += -std=c++0x
+
+greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+
+TARGET = qtcanvas
+TEMPLATE = app
+
+
+SOURCES +=\
+    src/mainwindow.cpp \
+    src/main.cpp \
+    src/available_quizzes.cpp \
+    src/login.cpp \
+    src/state.cpp \
+    src/viewport.cpp
+
+HEADERS  += \
+    include/api_delegate.h \
+    include/mainwindow.h \
+    include/available_quizzes.h \
+    include/login.h \
+    include/state.h \
+    include/viewport.h
+
+FORMS    += forms/mainwindow.ui \
+    forms/available_quizzes.ui \
+    forms/login.ui
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/release/ -lcanvas
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/debug/ -lcanvas
+else:unix: LIBS += -L$$PWD/../../libcanvas/lib/ -lcanvas
+
+INCLUDEPATH += $$PWD/../../libcanvas/include
+DEPENDPATH += $$PWD/../../libcanvas/include
+
+OTHER_FILES += \
+    src/mainwindow.py
