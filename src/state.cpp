@@ -56,6 +56,8 @@ void State::reset(bool shuttingDown)
 
 void State::loadCourseQuizzes(Canvas::Course const &course)
 {
+    debug() << "Loading quizzes for course" << course.id();
+
     ((Canvas::Course&)course).loadQuizzes(mSession, [&](bool success) {
         if (success) {
             Course::Quizzes quizzes = course.quizzes();
@@ -63,6 +65,8 @@ void State::loadCourseQuizzes(Canvas::Course const &course)
                 debug() << "new quiz:" << quiz->id();
                 emit courseQuizAdded(*quiz);
             }
+        } else {
+            error() << "loading quizzes failed";
         }
     });
 }

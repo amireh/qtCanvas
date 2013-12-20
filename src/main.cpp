@@ -6,6 +6,7 @@ int main(int argc, char *argv[])
 {
     int rc;
     Canvas::init(argc, argv);
+    Canvas::Logger::unmute();
 
     QApplication app(argc, argv);
 

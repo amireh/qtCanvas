@@ -1,6 +1,8 @@
 #include "include/available_quizzes.h"
 #include "ui_available_quizzes.h"
 #include "include/state.h"
+#include <canvas/resources/quiz_submission.hpp>
+#include <canvas/utility.hpp>
 
 AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
     QWidget(parent),
@@ -51,13 +53,15 @@ QTreeWidgetItem* AvailableQuizzes::addCourse(Canvas::Course const &course, bool 
 
 void AvailableQuizzes::addCourseQuiz(Canvas::Quiz const &quiz)
 {
-    Canvas::Course const& course = *quiz.course();
+    Canvas::Course const &course = *quiz.course();
+    Canvas::Student &student = State::singleton().getStudent();
+    Canvas::Session &session = State::singleton().getSession();
 
     QTreeWidgetItem *quizItem;
     QTreeWidgetItem *courseItem = courseTreeItem(course);
 
     if (!courseItem) {
-        warn() << "course tree item not found for course"
+        warn() << "unable to find course tree item for course"
                 << quiz.course()->id();
 
         courseItem = addCourse(course);
@@ -70,6 +74,13 @@ void AvailableQuizzes::addCourseQuiz(Canvas::Quiz const &quiz)
     debug() << "new tree item for quiz#" << quiz.id() << " "
             << "to course#" << quiz.course()->id()
             << ", titled: " << quiz.title();
+
+    student.loadQuizSubmission(session, quiz, [&](bool success) {
+        if (success) {
+            Canvas::QuizSubmission const *qs = student.quizSubmission(quiz);
+            quizItem->setText(2, QString("%1").arg(qs->keptScore()));
+        }
+    });
 }
 
 QTreeWidgetItem *AvailableQuizzes::courseTreeItem(const Canvas::Course &course)
