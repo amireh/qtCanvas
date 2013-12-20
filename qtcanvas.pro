@@ -19,7 +19,8 @@ SOURCES +=\
     src/available_quizzes.cpp \
     src/login.cpp \
     src/state.cpp \
-    src/viewport.cpp
+    src/viewport.cpp \
+    src/qproxy.cpp
 
 HEADERS  += \
     include/api_delegate.h \
@@ -27,7 +28,9 @@ HEADERS  += \
     include/available_quizzes.h \
     include/login.h \
     include/state.h \
-    include/viewport.h
+    include/viewport.h \
+    include/type_exports.hpp \
+    include/qproxy.hpp
 
 FORMS    += forms/mainwindow.ui \
     forms/available_quizzes.ui \

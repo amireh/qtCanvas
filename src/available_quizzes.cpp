@@ -3,6 +3,7 @@
 #include "include/state.h"
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/utility.hpp>
+#include "include/type_exports.hpp"
 
 AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
     QWidget(parent),
@@ -19,6 +20,8 @@ AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
 
     QObject::connect(&State::singleton(), SIGNAL(loggedOut()),
                      this, SLOT(reset()));
+    QObject::connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
+                     this, SLOT(updateQuizActions(QTreeWidgetItem*,QTreeWidgetItem*)));
 }
 
 AvailableQuizzes::~AvailableQuizzes()
@@ -70,6 +73,7 @@ void AvailableQuizzes::addCourseQuiz(Canvas::Quiz const &quiz)
     quizItem = new QTreeWidgetItem(courseItem);
     quizItem->setText(0, QString::fromStdString(quiz.title()));
     quizItem->setText(1, tr("-"));
+    quizItem->setData(3, 0x0100, QVariant::fromValue(PQuiz(&quiz)));
 
     debug() << "new tree item for quiz#" << quiz.id() << " "
             << "to course#" << quiz.course()->id()
@@ -95,6 +99,24 @@ QTreeWidgetItem *AvailableQuizzes::courseTreeItem(const Canvas::Course &course)
     }
 
     return nullptr;
+}
+
+void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetItem */*previous*/)
+{
+    PQuiz selectedQuiz = *current->data(3, 0x0100).value<PQuiz>();
+
+    ui->takeQuizButton->setEnabled(false);
+
+    if (selectedQuiz) {
+        Canvas::Quiz const& quiz = **selectedQuiz;
+        Canvas::Student const& student = State::singleton().getStudent();
+
+        debug() << "selection is now: quiz#" << quiz.id();
+
+        if (student.canTakeQuiz(quiz)) {
+            ui->takeQuizButton->setEnabled(true);
+        }
+    }
 }
 
 

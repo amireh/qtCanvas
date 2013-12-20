@@ -12,10 +12,6 @@
 #include <canvas/resources/quiz.hpp>
 #include <vector>
 
-namespace Canvas {
-typedef int quiz;
-}
-
 class State : public QObject, public Canvas::Logger
 {
     Q_OBJECT

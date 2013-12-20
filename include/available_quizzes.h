@@ -23,6 +23,7 @@ private slots:
     QTreeWidgetItem* addCourse(Canvas::Course const&, bool skipTest = false);
     void addCourseQuiz(Canvas::Quiz const&);
     void reset();
+    void updateQuizActions(QTreeWidgetItem*, QTreeWidgetItem*);
 
 private:
     Ui::AvailableQuizzes *ui;
