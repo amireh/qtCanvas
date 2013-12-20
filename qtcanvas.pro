@@ -9,7 +9,7 @@ QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = qtcanvas
+TARGET = qtCanvas
 TEMPLATE = app
 
 
@@ -40,5 +40,4 @@ else:unix: LIBS += -L$$PWD/../../libcanvas/lib/ -lcanvas
 INCLUDEPATH += $$PWD/../../libcanvas/include
 DEPENDPATH += $$PWD/../../libcanvas/include
 
-OTHER_FILES += \
-    src/mainwindow.py
+OTHER_FILES +=

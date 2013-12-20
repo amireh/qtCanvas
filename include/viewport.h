@@ -3,20 +3,32 @@
 
 #include <QWidget>
 #include <QLayout>
+#include <QStatusBar>
+#include <map>
+#include <canvas/logger.hpp>
 
-class Viewport
+class Viewport : public Canvas::Logger
 {
 public:
     virtual ~Viewport();
     static Viewport& singleton();
 
     void setLayout(QLayout*);
-    void setContent(QWidget*);
+    void setView(QWidget*);
+    void setStatusBar(QStatusBar*);
+    void setStatus(QString const&);
+
+    QStatusBar* getStatusBar() const;
+
+    void transition(std::string const&);
+    void registerView(std::string const&, QWidget*);
 
 protected:
     QLayout *layout;
-    QWidget *content;
+    QWidget *view;
+    QStatusBar *statusBar;
 
+    std::map<std::string, QWidget*> views;
 private:
     Viewport();
     static Viewport* gInstance;

@@ -2,8 +2,9 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include "include/login.h"
 #include "include/viewport.h"
+#include "include/login.h"
+#include "include/available_quizzes.h"
 
 namespace Ui {
 class MainWindow;
@@ -17,9 +18,13 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+public slots:
+    void logout();
+
 private:
     Ui::MainWindow *ui;
-    Login* loginWidget;
+    Login *loginView;
+    AvailableQuizzes *availableQuizzesView;
 };
 
 #endif // MAINWINDOW_H

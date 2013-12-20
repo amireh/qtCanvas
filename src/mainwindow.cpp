@@ -5,16 +5,33 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow),
-    loginWidget(new Login)
+    loginView(new Login),
+    availableQuizzesView(new AvailableQuizzes)
 {
+    Viewport &viewport = Viewport::singleton();
     ui->setupUi(this);
-    Viewport::singleton().setLayout(ui->centralWidget->layout());
-    Viewport::singleton().setContent(loginWidget);
+
+    QObject::connect(ui->actionLogout, SIGNAL(triggered()),
+                     this, SLOT(logout()));
+
+    viewport.setLayout(ui->centralWidget->layout());
+    viewport.setStatusBar(ui->statusBar);
+
+    viewport.registerView("login", loginView);
+    viewport.registerView("available_quizzes", availableQuizzesView);
+    viewport.transition("login");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete loginWidget;
+    delete loginView;
+    delete availableQuizzesView;
     delete &State::singleton();
+}
+
+void MainWindow::logout()
+{
+    Viewport::singleton().transition("login");
+    State::singleton().emit loggedOut();
 }

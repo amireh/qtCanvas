@@ -2,12 +2,14 @@
 #define LOGIN_H
 
 #include <QWidget>
+#include <QErrorMessage>
+#include <canvas/logger.hpp>
 
 namespace Ui {
 class Login;
 }
 
-class Login : public QWidget
+class Login : public QWidget, public Canvas::Logger
 {
     Q_OBJECT
 
@@ -20,6 +22,7 @@ private slots:
 
 private:
     Ui::Login *ui;
+    QErrorMessage *errorMessageDialog;
 };
 
 #endif // LOGIN_H
