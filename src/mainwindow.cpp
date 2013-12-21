@@ -34,4 +34,5 @@ void MainWindow::logout()
 {
     Viewport::singleton().transition("login");
     State::singleton().emit loggedOut();
+    State::singleton().reset();
 }

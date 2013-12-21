@@ -103,9 +103,15 @@ QTreeWidgetItem *AvailableQuizzes::courseTreeItem(const Canvas::Course &course)
 
 void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetItem */*previous*/)
 {
-    PQuiz selectedQuiz = *current->data(3, 0x0100).value<PQuiz>();
+    PQuiz selectedQuiz;
 
     ui->takeQuizButton->setEnabled(false);
+
+    if (!current) {
+        return;
+    }
+
+    selectedQuiz = *current->data(3, 0x0100).value<PQuiz>();
 
     if (selectedQuiz) {
         Canvas::Quiz const& quiz = **selectedQuiz;

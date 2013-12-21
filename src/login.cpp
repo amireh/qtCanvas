@@ -20,17 +20,16 @@ Login::~Login()
 
 void Login::on_btnLogin_clicked()
 {
+    State &state = State::singleton();
     Canvas::Session &session = State::singleton().getSession();
     Canvas::Student &student = State::singleton().getStudent();
     Viewport &viewport = Viewport::singleton();
-    State &state = State::singleton();
 
     viewport.setStatus(tr("Authenticating..."));
 
     debug() << "authentication token:"
             << ui->txtToken->text().toStdString();
 
-    state.reset();
     student.setApiToken(ui->txtToken->text().toStdString());
     session.authenticate(student);
 

@@ -6,9 +6,10 @@
 
 int main(int argc, char *argv[])
 {
-    QTCANVAS_EXPORT_TYPES
-
     int rc;
+
+    QTCANVAS_EXPORT_TYPES;
+
     Canvas::init(argc, argv);
     Canvas::Logger::unmute();
 

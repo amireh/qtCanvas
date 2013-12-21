@@ -20,7 +20,8 @@ SOURCES +=\
     src/login.cpp \
     src/state.cpp \
     src/viewport.cpp \
-    src/qproxy.cpp
+    src/qproxy.cpp \
+    src/take_quiz.cpp
 
 HEADERS  += \
     include/api_delegate.h \
@@ -30,11 +31,13 @@ HEADERS  += \
     include/state.h \
     include/viewport.h \
     include/type_exports.hpp \
-    include/qproxy.hpp
+    include/qproxy.hpp \
+    include/take_quiz.hpp
 
 FORMS    += forms/mainwindow.ui \
     forms/available_quizzes.ui \
-    forms/login.ui
+    forms/login.ui \
+    forms/take_quiz.ui
 
 win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/release/ -lcanvas
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/debug/ -lcanvas
