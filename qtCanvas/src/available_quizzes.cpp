@@ -117,7 +117,7 @@ void AvailableQuizzes::addQuiz(Canvas::Quiz const &quiz)
     quizItem = new QTreeWidgetItem(courseItem);
     quizItem->setText(0, QString::fromStdString(quiz.title()));
     quizItem->setText(1, tr("-"));
-    quizItem->setData(3, 0x0100, QVariant::fromValue(PQuiz(&quiz)));
+    quizItem->setData(100, 0x0100, QVariant::fromValue(PQuiz(&quiz)));
 
     debug() << "new tree item for quiz#" << quiz.id() << " "
             << "to course#" << quiz.course()->id()
@@ -162,7 +162,7 @@ void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetIt
         return;
     }
 
-    selectedQuiz = *current->data(3, 0x0100).value<PQuiz>();
+    selectedQuiz = *current->data(100, 0x0100).value<PQuiz>();
 
     if (selectedQuiz) {
         Canvas::Quiz const& quiz = **selectedQuiz;
@@ -266,15 +266,28 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
                       QString("%1 (out of %2)")
                       .arg(QString::number(qs.keptScore(), 'g', 2))
                       .arg(quiz.pointsPossible()));
+    treeItem->setText(3, QString("%1").arg(qs.attempt()));
+
 }
 
 void AvailableQuizzes::takeQuiz()
 {
-    PQuiz selectedQuiz = ui->treeWidget->currentItem()->data(3, 0x0100).value<PQuiz>();
+    PQuiz selectedQuiz = ui->treeWidget->currentItem()->data(100, 0x0100).value<PQuiz>();
+    Canvas::Student &student = State::singleton().getStudent();
+    Canvas::Session &session = State::singleton().getSession();
 
     if (selectedQuiz) {
-        State::singleton().setActiveQuiz(*selectedQuiz);
-        Viewport::singleton().transition("TakeQuiz");
+        setStatus("Requesting a quiz-taking session...");
+
+        student.takeQuiz(session, **selectedQuiz, [&](QuizSubmission const* qs) {
+            if (qs) {
+                State::singleton().setActiveQuiz(*selectedQuiz);
+                Viewport::singleton().transition("TakeQuiz");
+            }
+            else {
+                setStatus("Error: the Canvas server has rejected your request.");
+            }
+        });
     }
 }
 

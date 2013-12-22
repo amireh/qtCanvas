@@ -1,5 +1,7 @@
 #include "tests.hpp"
 #include "include/take_quiz.hpp"
+#include "include/mainwindow.h"
+#include "include/type_exports.hpp"
 
 Tests::Tests()
 {
@@ -39,16 +41,35 @@ void Tests::createQuestionWidgets()
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") == NULL);
 
     view.setup();
+    view.renderQuestions();
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") != NULL);
 
     view.cleanup();
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") == NULL);
 }
 
-
-void Tests::testSomething()
+int main(int argc, char *argv[])
 {
-    QVERIFY(false);
-}
+    int rc;
 
-QTEST_MAIN(Tests)
+    QTCANVAS_EXPORT_TYPES;
+
+    QApplication app(argc, argv);
+    app.setAttribute(Qt::AA_Use96Dpi, true);
+
+    Canvas::init(argc, argv);
+    Canvas::Logger::unmute();
+
+    Tests tc;
+
+    MainWindow mainWindow;
+//    mainWindow.show();
+
+    QTEST_DISABLE_KEYPAD_NAVIGATION
+
+    rc = QTest::qExec(&tc, argc, argv);
+
+    Canvas::free();
+
+    return rc;
+}

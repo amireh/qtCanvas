@@ -4,6 +4,13 @@
 #include <QWidget>
 #include <canvas/canvas.hpp>
 
+#ifdef QTCANVAS_TEST
+#define QTCANVAS_EXPORTS \
+    friend class Tests;
+#else
+#define QTCANVAS_EXPORTS
+#endif
+
 class QView : public QWidget
 {
     Q_OBJECT

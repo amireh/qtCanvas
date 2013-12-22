@@ -36,6 +36,12 @@ SOURCES += \
     $${ROOT_DIRECTORY}/qtCanvas/src/take_quiz.cpp \
     $${ROOT_DIRECTORY}/qtCanvas/src/qview.cpp
 
+FORMS += \
+  $${ROOT_DIRECTORY}/qtCanvas/forms/mainwindow.ui \
+  $${ROOT_DIRECTORY}/qtCanvas/forms/available_quizzes.ui \
+  $${ROOT_DIRECTORY}/qtCanvas/forms/login.ui \
+  $${ROOT_DIRECTORY}/qtCanvas/forms/take_quiz.ui
+
 win32:CONFIG(release, debug|release): LIBS += -lcanvas
 else:win32:CONFIG(debug, debug|release): LIBS += -lcanvas
-else:unix: LIBS += -lcanvas
+else:unix: LIBS += -lcanvas -ljsoncpp

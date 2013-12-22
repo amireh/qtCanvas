@@ -16,9 +16,3 @@ TEMPLATE = app
 # MOC_DIR = $${BUILD_DIRECTORY}/qtCanvas
 
 SOURCES += src/main.cpp
-
-FORMS += \
-  forms/mainwindow.ui \
-  forms/available_quizzes.ui \
-  forms/login.ui \
-  forms/take_quiz.ui

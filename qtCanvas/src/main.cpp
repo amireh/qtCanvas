@@ -3,6 +3,7 @@
 #include <canvas/resources/quiz.hpp>
 #include <QApplication>
 #include "include/type_exports.hpp"
+#include "include/viewport.h"
 
 int main(int argc, char *argv[])
 {
@@ -20,6 +21,8 @@ int main(int argc, char *argv[])
 
     MainWindow w;
     w.show();
+
+    Viewport::singleton().transition("Login");
 
     rc = app.exec();
 

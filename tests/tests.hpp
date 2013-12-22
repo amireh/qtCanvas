@@ -15,7 +15,6 @@ private Q_SLOTS:
     void initTestCase();
     void cleanupTestCase();
     void createQuestionWidgets();
-    void testSomething();
 
 private:
     Canvas::String loadFixture(Canvas::String const& path);

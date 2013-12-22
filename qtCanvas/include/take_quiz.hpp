@@ -1,16 +1,30 @@
 #ifndef TAKE_QUIZ_HPP
 #define TAKE_QUIZ_HPP
 
+#include <QRadioButton>
+#include <QLabel>
+#include <QGroupBox>
+#include <QButtonGroup>
+#include <QAbstractButton>
+#include <QMessageBox>
+
 #include "include/qview.hpp"
 #include "include/state.h"
 #include <canvas/resources/quiz.hpp>
+#include <canvas/resources/quiz_submission.hpp>
 #include <canvas/resources/quiz_question.hpp>
+#include <canvas/resources/quiz_question_answer.hpp>
+#include <canvas/resources/quiz_questions/multiple_choice.hpp>
+#include <map>
+#include <functional>
 
 namespace Ui {
 class TakeQuiz;
 }
 
-class TakeQuiz : public QView
+using Canvas::QuizQuestion;
+
+class TakeQuiz : public QView, public Canvas::Logger
 {
     Q_OBJECT
 
@@ -21,9 +35,22 @@ public:
     virtual void setup();
     virtual void cleanup();
 
+private slots:
+    void chooseMultipleChoiceAnswer(QAbstractButton*);
+    void submitQuiz();
 private:
+    QTCANVAS_EXPORTS
+
+    typedef void (TakeQuiz::*QuestionRenderer)(QuizQuestion*, QWidget*);
+
     Ui::TakeQuiz *ui;
     Canvas::Quiz *mQuiz;
+    Canvas::QuizSubmission *mQuizSubmission;
+
+    std::map<Canvas::String, QuestionRenderer> mRenderers;
+
+    void renderQuestions();
+    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*);
 };
 
 #endif // TAKE_QUIZ_HPP

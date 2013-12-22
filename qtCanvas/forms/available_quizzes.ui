@@ -28,11 +28,14 @@
      <property name="animated">
       <bool>true</bool>
      </property>
+     <property name="allColumnsShowFocus">
+      <bool>false</bool>
+     </property>
      <property name="headerHidden">
       <bool>false</bool>
      </property>
      <property name="columnCount">
-      <number>3</number>
+      <number>4</number>
      </property>
      <attribute name="headerDefaultSectionSize">
       <number>160</number>
@@ -53,6 +56,11 @@
      <column>
       <property name="text">
        <string>Score</string>
+      </property>
+     </column>
+     <column>
+      <property name="text">
+       <string>Attempt</string>
       </property>
      </column>
     </widget>

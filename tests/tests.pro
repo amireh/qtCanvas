@@ -9,6 +9,8 @@ CONFIG += testcase
 CONFIG -= app_bundle
 CONFIG += console
 
+QMAKE_CXXFLAGS += -DQTCANVAS_TEST
+
 INCLUDEPATH += \
   $${ROOT_DIRECTORY}/qtCanvas \
   $${BUILD_DIRECTORY}/qtCanvas # for moc'ed UI headers
