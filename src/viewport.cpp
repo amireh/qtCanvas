@@ -3,11 +3,16 @@
 
 Viewport* Viewport::gInstance = nullptr;
 
-Viewport::Viewport() : Logger("Viewport")
+Viewport::Viewport() : Logger("Viewport"), errorMessageDialog(nullptr)
 {
+//    errorMessageDialog = new QErrorMessage(this);
 }
 
 Viewport::~Viewport() {
+    if (errorMessageDialog) {
+        delete errorMessageDialog;
+        errorMessageDialog = nullptr;
+    }
 }
 
 
@@ -21,9 +26,10 @@ Viewport& Viewport::singleton() {
 
 void Viewport::setLayout(QLayout* inLayout) {
     layout = inLayout;
+    errorMessageDialog = new QErrorMessage(layout->parentWidget());
 }
 
-void Viewport::setView(QWidget *inWidget) {
+void Viewport::setView(QView *inWidget) {
     if (!layout) {
         throw "contentFrame must be set before assigning content";
     }
@@ -31,12 +37,14 @@ void Viewport::setView(QWidget *inWidget) {
     if (view) {
         debug() << "detaching view" << view;
         layout->removeWidget(view);
+        view->cleanup();
         view->hide();
     }
 
     view = inWidget;
     layout->addWidget(view);
     view->show();
+    view->setup();
 
     debug() << "attaching view" << view;
 }
@@ -53,7 +61,7 @@ void Viewport::setStatus(const QString &message)
 
 void Viewport::transition(const std::string &viewId)
 {
-    QWidget* view = views[viewId];
+    QView* view = views[viewId];
 
     if (!view) {
         throw "no such view to transition to" + viewId;
@@ -62,7 +70,12 @@ void Viewport::transition(const std::string &viewId)
     setView(view);
 }
 
-void Viewport::registerView(const std::string &viewId, QWidget *view)
+void Viewport::registerView(const std::string &viewId, QView *view)
 {
     views[viewId] = view;
+}
+
+QErrorMessage *Viewport::errorDialog()
+{
+    return errorMessageDialog;
 }

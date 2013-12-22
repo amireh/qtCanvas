@@ -4,8 +4,10 @@
 #include <QWidget>
 #include <QLayout>
 #include <QStatusBar>
+#include <QErrorMessage>
 #include <map>
 #include <canvas/logger.hpp>
+#include "include/qview.hpp"
 
 class Viewport : public Canvas::Logger
 {
@@ -14,21 +16,24 @@ public:
     static Viewport& singleton();
 
     void setLayout(QLayout*);
-    void setView(QWidget*);
+    void setView(QView*);
     void setStatusBar(QStatusBar*);
     void setStatus(QString const&);
 
     QStatusBar* getStatusBar() const;
 
     void transition(std::string const&);
-    void registerView(std::string const&, QWidget*);
+    void registerView(std::string const&, QView*);
+
+    QErrorMessage* errorDialog();
 
 protected:
     QLayout *layout;
-    QWidget *view;
+    QView *view;
     QStatusBar *statusBar;
+    QErrorMessage *errorMessageDialog;
 
-    std::map<std::string, QWidget*> views;
+    std::map<std::string, QView*> views;
 private:
     Viewport();
     static Viewport* gInstance;

@@ -9,9 +9,6 @@ State::State() : Logger("qtCanvas"), mStudent(nullptr) {
     Canvas::Settings::set("Canvas::_host", "HTTP://localhost");
     Canvas::Settings::set("Canvas::_port", "3000");
 
-    QObject::connect(this, SIGNAL(courseAdded(Canvas::Course const&)),
-                     this, SLOT(loadCourseQuizzes(Canvas::Course const&)));
-
     reset();
 }
 
@@ -52,21 +49,4 @@ void State::reset(bool shuttingDown)
         mStudent = new Canvas::Student();
 
     }
-}
-
-void State::loadCourseQuizzes(Canvas::Course const &course)
-{
-    debug() << "Loading quizzes for course" << course.id();
-
-    ((Canvas::Course&)course).loadQuizzes(mSession, [&](bool success) {
-        if (success) {
-            Course::Quizzes quizzes = course.quizzes();
-            for (Canvas::Quiz const* quiz : quizzes) {
-                debug() << "new quiz:" << quiz->id();
-                emit courseQuizAdded(*quiz);
-            }
-        } else {
-            error() << "loading quizzes failed";
-        }
-    });
 }

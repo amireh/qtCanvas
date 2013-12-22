@@ -1,32 +1,75 @@
 #include "include/available_quizzes.h"
 #include "ui_available_quizzes.h"
 #include "include/state.h"
-#include <canvas/resources/quiz_submission.hpp>
+#include "include/viewport.h"
 #include <canvas/utility.hpp>
 #include "include/type_exports.hpp"
 
+using Canvas::Course;
+using Canvas::Quiz;
+using Canvas::QuizSubmission;
+
 AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
-    QWidget(parent),
+    QView(parent),
     Logger("AvailableQuizzes"),
     ui(new Ui::AvailableQuizzes)
 {
     ui->setupUi(this);
 
-    QObject::connect(&State::singleton(), SIGNAL(courseAdded(Canvas::Course const&)),
+    QObject::connect(this, SIGNAL(courseLoaded(Canvas::Course const&)),
                      this, SLOT(addCourse(Canvas::Course const&)));
 
-    QObject::connect(&State::singleton(), SIGNAL(courseQuizAdded(Canvas::Quiz const&)),
-                     this, SLOT(addCourseQuiz(Canvas::Quiz const&)));
+    QObject::connect(this, SIGNAL(quizLoaded(Canvas::Quiz const&)),
+                     this, SLOT(addQuiz(Canvas::Quiz const&)));
 
     QObject::connect(&State::singleton(), SIGNAL(loggedOut()),
                      this, SLOT(reset()));
     QObject::connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
                      this, SLOT(updateQuizActions(QTreeWidgetItem*,QTreeWidgetItem*)));
+
+    QObject::connect(this, SIGNAL(courseLoaded(Canvas::Course const&)),
+                     this, SLOT(loadCourseQuizzes(Canvas::Course const&)));
+
+    QObject::connect(this, SIGNAL(quizLoaded(Canvas::Quiz const&)),
+                     this, SLOT(updateQuizStatus(Canvas::Quiz const&)));
+    QObject::connect(this, SIGNAL(quizLoaded(Canvas::Quiz const&)),
+                     this, SLOT(loadQuizSubmission(Canvas::Quiz const&)));
+
+    QObject::connect(this, SIGNAL(quizSubmissionLoaded(Canvas::QuizSubmission const&)),
+                     this, SLOT(updateQuizStatus(Canvas::QuizSubmission const&)));
+
 }
 
 AvailableQuizzes::~AvailableQuizzes()
 {
     delete ui;
+}
+
+void AvailableQuizzes::setup()
+{
+    State &state = State::singleton();
+    Canvas::Session &session = state.getSession();
+    Canvas::Student &student = state.getStudent();
+
+    setStatus("Loading courses...");
+
+    student.loadCourses(session, [&](bool success) {
+        if (success) {
+            for (Canvas::Course *course : student.courses()) {
+                emit courseLoaded(*course);
+                debug() << "new course:" << course->id();
+            }
+        }
+        else {
+            Viewport::singleton().errorDialog()->showMessage(
+                        tr("Unable to load courses."),
+                        "api_error");
+        }
+    });
+}
+
+void AvailableQuizzes::cleanup()
+{
 }
 
 QTreeWidgetItem* AvailableQuizzes::addCourse(Canvas::Course const &course, bool skipTest)
@@ -54,11 +97,9 @@ QTreeWidgetItem* AvailableQuizzes::addCourse(Canvas::Course const &course, bool 
     return courseItem;
 }
 
-void AvailableQuizzes::addCourseQuiz(Canvas::Quiz const &quiz)
+void AvailableQuizzes::addQuiz(Canvas::Quiz const &quiz)
 {
     Canvas::Course const &course = *quiz.course();
-    Canvas::Student &student = State::singleton().getStudent();
-    Canvas::Session &session = State::singleton().getSession();
 
     QTreeWidgetItem *quizItem;
     QTreeWidgetItem *courseItem = courseTreeItem(course);
@@ -78,13 +119,6 @@ void AvailableQuizzes::addCourseQuiz(Canvas::Quiz const &quiz)
     debug() << "new tree item for quiz#" << quiz.id() << " "
             << "to course#" << quiz.course()->id()
             << ", titled: " << quiz.title();
-
-    student.loadQuizSubmission(session, quiz, [&](bool success) {
-        if (success) {
-            Canvas::QuizSubmission const *qs = student.quizSubmission(quiz);
-            quizItem->setText(2, QString("%1").arg(qs->keptScore()));
-        }
-    });
 }
 
 QTreeWidgetItem *AvailableQuizzes::courseTreeItem(const Canvas::Course &course)
@@ -96,6 +130,20 @@ QTreeWidgetItem *AvailableQuizzes::courseTreeItem(const Canvas::Course &course)
 
     if (!candidateCourseItems.isEmpty()) {
         return candidateCourseItems.first();
+    }
+
+    return nullptr;
+}
+
+QTreeWidgetItem *AvailableQuizzes::quizTreeItem(const Quiz &quiz)
+{
+    QList<QTreeWidgetItem*> candidateItems = ui->treeWidget->findItems(
+                QString::fromStdString(quiz.title()),
+                Qt::MatchExactly | Qt::MatchRecursive,
+                0);
+
+    if (!candidateItems.isEmpty()) {
+        return candidateItems.first();
     }
 
     return nullptr;
@@ -129,3 +177,92 @@ void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetIt
 void AvailableQuizzes::reset() {
     ui->treeWidget->clear();
 }
+
+
+void AvailableQuizzes::loadCourseQuizzes(Canvas::Course const &course)
+{
+    debug() << "Loading quizzes for course" << course.id();
+    Canvas::Session &session = State::singleton().getSession();
+
+    ((Course&)course).loadQuizzes(session, [&](bool success) {
+        if (success) {
+            Course::Quizzes quizzes = course.quizzes();
+            for (Canvas::Quiz const* quiz : quizzes) {
+                debug() << "new quiz:" << quiz->id();
+                emit quizLoaded(*quiz);
+            }
+        } else {
+            error() << "loading quizzes failed";
+        }
+    });
+}
+
+void AvailableQuizzes::loadQuizSubmission(const Canvas::Quiz &quiz) {
+    Canvas::Student& student = State::singleton().getStudent();
+    Canvas::Session &session = State::singleton().getSession();
+
+    student.loadQuizSubmission(session, quiz, [&](bool success) {
+        if (success) {
+            emit quizSubmissionLoaded(*student.quizSubmission(quiz));
+        }
+    });
+}
+
+void AvailableQuizzes::updateQuizStatus(const Canvas::Quiz &quiz)
+{
+    QTreeWidgetItem *treeItem = quizTreeItem(quiz);
+
+    if (!treeItem) {
+        error() << "Unable to find tree item for Quiz#" << quiz.id() << ". "
+                << "Quiz status can not be updated.";
+
+        return;
+    }
+
+    Canvas::Student &student = State::singleton().getStudent();
+    QString status;
+
+    if (student.canTakeQuiz(quiz)) {
+        status = "Not Taken Yet.";
+    }
+    else {
+        status = "Not Available.";
+    }
+
+    treeItem->setText(1, status);
+}
+
+
+void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
+{
+    QString status;
+    Canvas::Quiz const& quiz = *qs.quiz();
+    QTreeWidgetItem *treeItem = quizTreeItem(quiz);
+
+    if (!treeItem) {
+        error() << "Unable to find tree item for Quiz#" << quiz.id() << ". "
+                << "Quiz status can not be updated.";
+
+        return;
+    }
+
+    if (qs.isTakeable()) {
+        status = "In Progress.";
+    }
+    else if (qs.isComplete()) {
+        status = "Taken.";
+    }
+    else if (qs.isPendingReview()) {
+        status = "In Review.";
+    }
+
+    debug() << "Updating quiz status from QS status: " << status.toStdString();
+
+    treeItem->setText(1, status);
+    treeItem->setText(2,
+                      QString("%1 (out of %2)")
+                      .arg(QString::number(qs.keptScore(), 'g', 2))
+                      .arg(quiz.pointsPossible()));
+
+}
+

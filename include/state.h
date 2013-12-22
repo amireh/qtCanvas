@@ -29,12 +29,7 @@ public:
     void reset(bool shuttingDown = false);
 
 signals:
-    void courseAdded(Canvas::Course const&);
-    void courseQuizAdded(Canvas::Quiz const&);
     void loggedOut();
-
-private slots:
-    void loadCourseQuizzes(Canvas::Course const&);
 
 private:
     State();

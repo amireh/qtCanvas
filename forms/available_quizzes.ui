@@ -52,7 +52,7 @@
      </column>
      <column>
       <property name="text">
-       <string>Points</string>
+       <string>Score</string>
       </property>
      </column>
     </widget>
