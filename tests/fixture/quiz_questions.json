@@ -1,0 +1,664 @@
+[
+    {
+        "assessment_question_id": 1,
+        "id": 1,
+        "position": 1,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "MC Q",
+        "question_type": "multiple_choice_question",
+        "question_text": "<p>A, B, C, or D?</p>",
+        "points_possible": 1,
+        "correct_comments": "Correct",
+        "incorrect_comments": "Incorrect",
+        "neutral_comments": "Donno",
+        "answers": [
+            {
+                "id": 3023,
+                "text": "A",
+                "html": "",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": 8899,
+                "text": "B",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 7907,
+                "text": "C",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 5646,
+                "text": "D",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 2,
+        "id": 2,
+        "position": 2,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "Question 2",
+        "question_type": "multiple_choice_question",
+        "question_text": "<p>D, A, B, or C?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": 3964,
+                "text": "A",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 6628,
+                "text": "B",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 2839,
+                "text": "C",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 6102,
+                "text": "D",
+                "html": "",
+                "comments": "",
+                "weight": 100
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 3,
+        "id": 3,
+        "position": 3,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "T/F Q",
+        "question_type": "true_false_question",
+        "question_text": "<p>Is is true?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "comments": "",
+                "text": "True",
+                "weight": 100,
+                "id": 1496
+            },
+            {
+                "comments": "",
+                "text": "False",
+                "weight": 0,
+                "id": 5354
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 4,
+        "id": 4,
+        "position": 4,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "FITB Q",
+        "question_type": "short_answer_question",
+        "question_text": "<p>Type something</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": "4684",
+                "text": "Something",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "1797",
+                "text": "False",
+                "comments": "",
+                "weight": 100
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 5,
+        "id": 5,
+        "position": 5,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "FIMB Question",
+        "question_type": "fill_in_multiple_blanks_question",
+        "question_text": "<p>Roses are [color1], violets are [color2]</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": "9711",
+                "text": "Red",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "color1"
+            },
+            {
+                "id": "2700",
+                "text": "Blue",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "color1"
+            },
+            {
+                "id": "9702",
+                "text": "bonkers",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "color2"
+            },
+            {
+                "id": "7150",
+                "text": "mumbojumbo",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "color2"
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 6,
+        "id": 6,
+        "position": 6,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "MAnswers Q",
+        "question_type": "multiple_answers_question",
+        "question_text": "<p>A and B, or B and C?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": "5514",
+                "text": "A",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "4261",
+                "text": "B",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "3322",
+                "text": "C",
+                "comments": "",
+                "weight": 0
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 7,
+        "id": 7,
+        "position": 7,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "Essay Q",
+        "question_type": "essay_question",
+        "question_text": "<p>Summarize your feelings towards life, the universe, and everything in decimal numbers.</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 8,
+        "id": 8,
+        "position": 8,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "MDropdowns Q",
+        "question_type": "multiple_dropdowns_question",
+        "question_text": "<p>Alligators are [color], zombies eat [organ].</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": "3208",
+                "text": "brainz",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "organ"
+            },
+            {
+                "id": "8331",
+                "text": "",
+                "comments": "",
+                "weight": 0,
+                "blank_id": "organ"
+            },
+            {
+                "id": "1381",
+                "text": "green",
+                "comments": "",
+                "weight": 100,
+                "blank_id": "color"
+            },
+            {
+                "id": "1638",
+                "text": "cool",
+                "comments": "",
+                "weight": 0,
+                "blank_id": "color"
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 9,
+        "id": 9,
+        "position": 9,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "Matching Q",
+        "question_type": "matching_question",
+        "question_text": "<p>Match 'em up!</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": 5750,
+                "text": "Who are you waiting for?",
+                "left": "Who are you waiting for?",
+                "right": "My brother.",
+                "comments": "",
+                "match_id": 190
+            },
+            {
+                "id": 5732,
+                "text": "What happened to Bob?",
+                "left": "What happened to Bob?",
+                "right": "He broke his leg.",
+                "comments": "",
+                "match_id": 6545
+            },
+            {
+                "id": 5730,
+                "text": "Are you done?",
+                "left": "Are you done?",
+                "right": "No, not yet.",
+                "comments": "",
+                "match_id": 6142
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": [
+            {
+                "text": "My brother.",
+                "match_id": 190
+            },
+            {
+                "text": "He broke his leg.",
+                "match_id": 6545
+            },
+            {
+                "text": "No, not yet.",
+                "match_id": 6142
+            },
+            {
+                "text": "Home.",
+                "match_id": 2486
+            },
+            {
+                "text": "On January 1st, 1960.",
+                "match_id": 8699
+            },
+            {
+                "text": "A coke, please.",
+                "match_id": 5803
+            }
+        ],
+        "matching_answer_incorrect_matches": "Home.\nOn January 1st, 1960.\nA coke, please."
+    },
+    {
+        "assessment_question_id": 10,
+        "id": 10,
+        "position": 10,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "Numerical Q",
+        "question_type": "numerical_question",
+        "question_text": "<p>What's 9 plus 3, or 4 minus zero?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": 766,
+                "text": "",
+                "comments": "",
+                "weight": 100,
+                "numerical_answer_type": "exact_answer",
+                "exact": 12,
+                "margin": 0.25
+            },
+            {
+                "id": 7554,
+                "text": "",
+                "comments": "",
+                "weight": 100,
+                "numerical_answer_type": "exact_answer",
+                "exact": 4,
+                "margin": 0
+            },
+            {
+                "id": 8155,
+                "text": "",
+                "comments": "",
+                "weight": 100,
+                "numerical_answer_type": "exact_answer",
+                "exact": 0,
+                "margin": 0
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 11,
+        "id": 11,
+        "position": 11,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "Formula Question",
+        "question_type": "calculated_question",
+        "question_text": "<p>What is 5 plus [x]?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 9.7
+                    }
+                ],
+                "answer": 14.7,
+                "id": 3979
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 9.7
+                    }
+                ],
+                "answer": 14.7,
+                "id": 8597
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 9.8
+                    }
+                ],
+                "answer": 14.8,
+                "id": 9992
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 1.8
+                    }
+                ],
+                "answer": 6.8,
+                "id": 7992
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 5.6
+                    }
+                ],
+                "answer": 10.6,
+                "id": 1193
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 6.5
+                    }
+                ],
+                "answer": 11.5,
+                "id": 4830
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 5
+                    }
+                ],
+                "answer": 10,
+                "id": 1325
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 1.1
+                    }
+                ],
+                "answer": 6.1,
+                "id": 4191
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 4.4
+                    }
+                ],
+                "answer": 9.4,
+                "id": 784
+            },
+            {
+                "weight": 100,
+                "variables": [
+                    {
+                        "name": "x",
+                        "value": 3.7
+                    }
+                ],
+                "answer": 8.7,
+                "id": 3165
+            }
+        ],
+        "variables": [
+            {
+                "name": "x",
+                "min": 1,
+                "max": 10,
+                "scale": 1
+            }
+        ],
+        "formulas": [
+            {
+                "formula": "x + 5"
+            }
+        ],
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 12,
+        "id": 12,
+        "position": 12,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "FITB Question",
+        "question_type": "short_answer_question",
+        "question_text": "<p>How many bananas does it take a monkey to go ooh-ooeh?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": "9150",
+                "text": "3",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "1421",
+                "text": "4",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "6719",
+                "text": "5",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": "6972",
+                "text": "none, monkeys never go ooh-ooeh",
+                "comments": "",
+                "weight": 100
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    },
+    {
+        "assessment_question_id": 14,
+        "id": 17,
+        "position": 13,
+        "quiz_group_id": null,
+        "quiz_id": 1,
+        "question_name": "MC Question",
+        "question_type": "multiple_choice_question",
+        "question_text": "<p>A, B, C, or D?</p>",
+        "points_possible": 1,
+        "correct_comments": "",
+        "incorrect_comments": "",
+        "neutral_comments": "",
+        "answers": [
+            {
+                "id": 3023,
+                "text": "",
+                "html": "",
+                "comments": "",
+                "weight": 100
+            },
+            {
+                "id": 8899,
+                "text": "",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 7907,
+                "text": "",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            },
+            {
+                "id": 5646,
+                "text": "",
+                "html": "",
+                "comments": "",
+                "weight": 0
+            }
+        ],
+        "variables": null,
+        "formulas": null,
+        "matches": null,
+        "matching_answer_incorrect_matches": null
+    }
+]

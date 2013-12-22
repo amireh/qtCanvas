@@ -19,6 +19,7 @@ public:
     ~TakeQuiz();
 
     virtual void setup();
+    virtual void cleanup();
 
 private:
     Ui::TakeQuiz *ui;

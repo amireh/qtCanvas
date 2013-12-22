@@ -1,3 +1,10 @@
-/test
+*.swp
 
+[QTC stuff]
 *.user
+*.autosave
+
+[build]
+/build
+/bin/!.gitkeep
+/bin/*
