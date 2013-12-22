@@ -10,5 +10,22 @@ TakeQuiz::TakeQuiz(QWidget *parent) :
 
 TakeQuiz::~TakeQuiz()
 {
+    for (auto question : mQuiz->questions()) {
+        QWidget *qqWidget = question->userData<QWidget>("QWidget");
+        assert(qqWidget);
+        delete qqWidget;
+        question->clearUserData("QWidget");
+    }
+    mQuiz = nullptr;
     delete ui;
+}
+
+void TakeQuiz::setup()
+{
+    mQuiz = State::singleton().activeQuiz();
+
+    for (auto question : mQuiz->questions()) {
+        QWidget *qqWidget = new QWidget(this);
+        question->setUserData<QWidget>("QWidget", qqWidget);
+    }
 }

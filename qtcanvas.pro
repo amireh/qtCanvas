@@ -3,15 +3,16 @@
 # Project created by QtCreator 2013-12-11T12:03:16
 #
 #-------------------------------------------------
+include(../buildInfo.pri)
 
-QT       += core gui
+QT       += core gui testlib
 QMAKE_CXXFLAGS += -std=c++0x
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
 TARGET = qtCanvas
 TEMPLATE = app
-
+CONFIG += testcase
 
 SOURCES +=\
     src/mainwindow.cpp \
@@ -45,7 +46,8 @@ win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/releas
 else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../libcanvas/lib/debug/ -lcanvas
 else:unix: LIBS += -L$$PWD/../../libcanvas/lib/ -lcanvas
 
-INCLUDEPATH += $$PWD/../../libcanvas/include
-DEPENDPATH += $$PWD/../../libcanvas/include
+#INCLUDEPATH += $$PWD/../../libcanvas/include
+#DEPENDPATH += $$PWD/../../libcanvas/include
 
-OTHER_FILES +=
+OTHER_FILES += \
+    buildInfo.pri
