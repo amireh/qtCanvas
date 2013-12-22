@@ -4,9 +4,7 @@
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
-    ui(new Ui::MainWindow),
-    loginView(new Login),
-    availableQuizzesView(new AvailableQuizzes)
+    ui(new Ui::MainWindow)
 {
     Viewport &viewport = Viewport::singleton();
     ui->setupUi(this);
@@ -17,22 +15,22 @@ MainWindow::MainWindow(QWidget *parent) :
     viewport.setLayout(ui->centralWidget->layout());
     viewport.setStatusBar(ui->statusBar);
 
-    viewport.registerView("login", loginView);
-    viewport.registerView("available_quizzes", availableQuizzesView);
-    viewport.transition("login");
+    viewport.registerView("Login", []() -> QView* { return new Login; });
+    viewport.registerView("AvailableQuizzes", []() -> QView* { return new AvailableQuizzes; });
+    viewport.registerView("TakeQuiz", []() -> QView* { return new TakeQuiz; });
+
+    viewport.transition("Login");
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
-    delete loginView;
-    delete availableQuizzesView;
     delete &State::singleton();
 }
 
 void MainWindow::logout()
 {
-    Viewport::singleton().transition("login");
+    Viewport::singleton().transition("Login");
     State::singleton().emit loggedOut();
     State::singleton().reset();
 }

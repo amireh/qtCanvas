@@ -28,15 +28,19 @@ public:
      */
     void reset(bool shuttingDown = false);
 
+    void setActiveQuiz(Canvas::Quiz*);
+    Canvas::Quiz* activeQuiz();
 signals:
     void loggedOut();
 
 private:
     State();
 
+    static State *ginstance;
+
     Canvas::Student *mStudent;
     Canvas::Session mSession;
-    static State *ginstance;
+    Canvas::Quiz *mActiveQuiz;
 };
 
 #endif // STATE_H

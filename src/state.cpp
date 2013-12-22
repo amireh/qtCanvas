@@ -50,3 +50,13 @@ void State::reset(bool shuttingDown)
 
     }
 }
+
+void State::setActiveQuiz(Canvas::Quiz *quiz)
+{
+    mActiveQuiz = quiz;
+}
+
+Canvas::Quiz *State::activeQuiz()
+{
+    return mActiveQuiz;
+}

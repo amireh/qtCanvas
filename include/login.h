@@ -23,4 +23,6 @@ private:
     Ui::Login *ui;
 };
 
+//Q_DECLARE_METATYPE(Login);
+
 #endif // LOGIN_H

@@ -5,6 +5,7 @@
 #include "include/viewport.h"
 #include "include/login.h"
 #include "include/available_quizzes.h"
+#include "include/take_quiz.hpp"
 
 namespace Ui {
 class MainWindow;
@@ -23,8 +24,6 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
-    Login *loginView;
-    AvailableQuizzes *availableQuizzesView;
 };
 
 #endif // MAINWINDOW_H

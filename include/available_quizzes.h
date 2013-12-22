@@ -81,6 +81,12 @@ private slots:
     void updateQuizStatus(Canvas::Quiz const&);
     void updateQuizStatus(Canvas::QuizSubmission const&);
 
+    /**
+     * @brief takeQuiz
+     * Start taking the selected quiz.
+     */
+    void takeQuiz();
+
 private:
     Ui::AvailableQuizzes *ui;
     QTreeWidgetItem* courseTreeItem(Canvas::Course const&);

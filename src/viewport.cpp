@@ -3,7 +3,11 @@
 
 Viewport* Viewport::gInstance = nullptr;
 
-Viewport::Viewport() : Logger("Viewport"), errorMessageDialog(nullptr)
+Viewport::Viewport()
+    : Logger("Viewport"),
+      mLayout(nullptr),
+      mView(nullptr),
+      errorMessageDialog(nullptr)
 {
 //    errorMessageDialog = new QErrorMessage(this);
 }
@@ -12,6 +16,11 @@ Viewport::~Viewport() {
     if (errorMessageDialog) {
         delete errorMessageDialog;
         errorMessageDialog = nullptr;
+    }
+
+    if (mView) {
+        delete mView;
+        mView = nullptr;
     }
 }
 
@@ -25,28 +34,55 @@ Viewport& Viewport::singleton() {
 }
 
 void Viewport::setLayout(QLayout* inLayout) {
-    layout = inLayout;
-    errorMessageDialog = new QErrorMessage(layout->parentWidget());
+    mLayout = inLayout;
+    errorMessageDialog = new QErrorMessage(mLayout->parentWidget());
 }
 
-void Viewport::setView(QView *inWidget) {
-    if (!layout) {
-        throw "contentFrame must be set before assigning content";
+void Viewport::transition(const std::string &viewType)
+{
+    if (!views[viewType]) {
+        throw std::runtime_error("No generator found for view " + viewType);
     }
 
-    if (view) {
-        debug() << "detaching view" << view;
-        layout->removeWidget(view);
-        view->cleanup();
-        view->hide();
+    assertLayoutSet();
+
+    ViewGenerator& generator = views[viewType];
+    QView *view;
+
+    if (mView) {
+        detach(mView);
+        delete mView;
+        mView = nullptr;
     }
 
-    view = inWidget;
-    layout->addWidget(view);
+    view = generator();
+    attach(view);
+
+    mView = view;
+}
+
+void Viewport::attach(QView *view) {
+    mLayout->addWidget(view);
     view->show();
     view->setup();
 
     debug() << "attaching view" << view;
+}
+
+void Viewport::detach(QView *view)
+{
+    debug() << "detaching view" << view;
+
+    mLayout->removeWidget(view);
+    view->cleanup();
+    view->hide();
+}
+
+void Viewport::assertLayoutSet()
+{
+    if (!mLayout) {
+        throw std::runtime_error("Viewport layout must be set before attaching views");
+    }
 }
 
 void Viewport::setStatusBar(QStatusBar *inStatusBar)
@@ -59,20 +95,9 @@ void Viewport::setStatus(const QString &message)
     statusBar->showMessage(message);
 }
 
-void Viewport::transition(const std::string &viewId)
+void Viewport::registerView(const std::string &viewId, ViewGenerator generator)
 {
-    QView* view = views[viewId];
-
-    if (!view) {
-        throw "no such view to transition to" + viewId;
-    }
-
-    setView(view);
-}
-
-void Viewport::registerView(const std::string &viewId, QView *view)
-{
-    views[viewId] = view;
+    views[viewId] = generator;
 }
 
 QErrorMessage *Viewport::errorDialog()

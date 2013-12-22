@@ -38,6 +38,9 @@ AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
     QObject::connect(this, SIGNAL(quizSubmissionLoaded(Canvas::QuizSubmission const&)),
                      this, SLOT(updateQuizStatus(Canvas::QuizSubmission const&)));
 
+    QObject::connect(ui->takeQuizButton, SIGNAL(released()),
+                     this, SLOT(takeQuiz()));
+
 }
 
 AvailableQuizzes::~AvailableQuizzes()
@@ -223,10 +226,10 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::Quiz &quiz)
     QString status;
 
     if (student.canTakeQuiz(quiz)) {
-        status = "Not Taken Yet.";
+        status = "Available";
     }
     else {
-        status = "Not Available.";
+        status = "Not Available";
     }
 
     treeItem->setText(1, status);
@@ -247,13 +250,13 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
     }
 
     if (qs.isTakeable()) {
-        status = "In Progress.";
+        status = "In Progress";
     }
     else if (qs.isComplete()) {
-        status = "Taken.";
+        status = "Complete";
     }
     else if (qs.isPendingReview()) {
-        status = "In Review.";
+        status = "Under Review";
     }
 
     debug() << "Updating quiz status from QS status: " << status.toStdString();
@@ -263,6 +266,15 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
                       QString("%1 (out of %2)")
                       .arg(QString::number(qs.keptScore(), 'g', 2))
                       .arg(quiz.pointsPossible()));
+}
 
+void AvailableQuizzes::takeQuiz()
+{
+    PQuiz selectedQuiz = ui->treeWidget->currentItem()->data(3, 0x0100).value<PQuiz>();
+
+    if (selectedQuiz) {
+        State::singleton().setActiveQuiz(*selectedQuiz);
+        Viewport::singleton().transition("TakeQuiz");
+    }
 }
 

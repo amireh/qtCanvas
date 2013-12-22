@@ -33,7 +33,7 @@ void Login::on_btnLogin_clicked()
         viewport.setStatus(tr("Authentication ") + tr(success ? "succeeded." : "failed"));
 
         if (success) {
-            viewport.transition("available_quizzes");
+            viewport.transition("AvailableQuizzes");
         }
         else {
             Viewport::singleton().errorDialog()->showMessage(

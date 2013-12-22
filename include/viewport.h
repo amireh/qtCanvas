@@ -12,28 +12,33 @@
 class Viewport : public Canvas::Logger
 {
 public:
+    typedef std::function<QView*()> ViewGenerator;
+
     virtual ~Viewport();
     static Viewport& singleton();
 
     void setLayout(QLayout*);
-    void setView(QView*);
     void setStatusBar(QStatusBar*);
     void setStatus(QString const&);
 
     QStatusBar* getStatusBar() const;
 
     void transition(std::string const&);
-    void registerView(std::string const&, QView*);
+    void registerView(std::string const&, ViewGenerator);
 
     QErrorMessage* errorDialog();
 
 protected:
-    QLayout *layout;
-    QView *view;
+    void attach(QView*);
+    void detach(QView*);
+    void assertLayoutSet();
+
+    QLayout *mLayout;
+    QView *mView;
     QStatusBar *statusBar;
     QErrorMessage *errorMessageDialog;
 
-    std::map<std::string, QView*> views;
+    std::map<std::string, ViewGenerator> views;
 private:
     Viewport();
     static Viewport* gInstance;
