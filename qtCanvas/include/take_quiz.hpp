@@ -22,6 +22,8 @@
 #include <map>
 #include <functional>
 
+#include "question_renderer.hpp"
+
 namespace Ui {
 class TakeQuiz;
 }
@@ -42,24 +44,26 @@ public:
     virtual void setup();
     virtual void cleanup();
 
+    virtual QuestionRenderer* generateRenderer(QuizQuestion *);
+
 private slots:
-    void chooseMultipleChoiceAnswer(QAbstractButton*);
     void submitQuiz();
     void markQuestion(bool);
+    void saveAnswer(const QuizQuestion *qq);
 private:
-    QTCANVAS_EXPORTS
-
-    typedef void (TakeQuiz::*QuestionRenderer)(QuizQuestion*, QWidget*, QLayout*);
+    typedef std::vector<QuestionRenderer*> Renderers;
 
     Ui::TakeQuiz *ui;
     Canvas::Quiz *mQuiz;
     Canvas::QuizSubmission *mQuizSubmission;
 
-    std::map<Canvas::String, QuestionRenderer> mRenderers;
+//    std::map<Canvas::String, QuestionRenderer*> mRenderers;
+    Renderers mRenderers;
 
     void renderQuestions();
     QLayout* renderQuestion(QuizQuestion*, QWidget*);
-    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*, QLayout*);
+    QWidget * renderAnswer(QWidget *qqWidget);
+//    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*, QLayout*);
 };
 
 #endif // TAKE_QUIZ_HPP

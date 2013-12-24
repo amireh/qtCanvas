@@ -20,4 +20,5 @@ DEPENDPATH += \
   $${BUILD_DIRECTORY}/qtCanvas # for .o files
 
 HEADERS += tests.hpp
+SOURCES -= $${ROOT_DIRECTORY}/qtCanvas/src/main.cpp
 SOURCES += tests.cpp

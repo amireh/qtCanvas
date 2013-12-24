@@ -41,7 +41,7 @@ void Tests::createQuestionWidgets()
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") == NULL);
 
     view.setup();
-    view.renderQuestions();
+//    view.renderQuestions();
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") != NULL);
 
     view.cleanup();
@@ -63,7 +63,7 @@ void Tests::populatesMultipleChoiceQuestionAnswers()
     State::singleton().setActiveQuizSubmission(&qs);
 
     view.setup();
-    view.renderQuestions();
+//    view.renderQuestions();
 
     QWidget *questionGroupBox =
             quiz.questions().front()->userData<QWidget>("QWidget");

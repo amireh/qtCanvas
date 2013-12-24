@@ -2,8 +2,9 @@
 #include "include/type_exports.hpp"
 #include "include/viewport.h"
 #include "ui_take_quiz.h"
+#include "question_renderers/multiple_choice.hpp"
 
-using namespace Canvas::QuizQuestions;
+//using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
 using Canvas::QuizSubmission;
 
@@ -13,8 +14,6 @@ TakeQuiz::TakeQuiz(QWidget *parent) :
     ui(new Ui::TakeQuiz)
 {
     ui->setupUi(this);
-    mRenderers.insert(std::make_pair("multiple_choice_question",
-                                     &TakeQuiz::renderMultipleChoiceQuestion));
 
     QObject::connect(ui->submitButton, SIGNAL(released()),
                      this, SLOT(submitQuiz()));
@@ -22,6 +21,12 @@ TakeQuiz::TakeQuiz(QWidget *parent) :
 
 TakeQuiz::~TakeQuiz()
 {
+    std::for_each(mRenderers.begin(), mRenderers.end(), [](QuestionRenderer* r) {
+        delete r;
+    });
+
+    mRenderers.clear();
+
     delete ui;
 }
 
@@ -74,25 +79,29 @@ void TakeQuiz::cleanup()
     mQuiz = nullptr;
 }
 
-void TakeQuiz::chooseMultipleChoiceAnswer(QAbstractButton *answerButton)
+QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
 {
-    Canvas::Session &session = State::singleton().getSession();
+    using namespace QuestionRenderers;
 
-    int answerId = answerButton->property("answerId").toInt();
-    MultipleChoice *qq = static_cast<MultipleChoice*>(*answerButton->property("qq").value<PQuizQuestion>());
+    const String &qqType = qq->type();
 
-    debug() << "choosing answer#" << answerId << "for question#" << qq->id();
+    if (qqType == "multiple_choice_question") {
+        return new MultipleChoice(qq);
+    }
 
-    qq->choose(answerId);
+    return nullptr;
+}
 
-    mQuizSubmission->save(qq, session, [&](bool success) {
-        if (success) {
-            setStatus("Answer saved.");
-        }
-        else {
-            setStatus("Error: answer could not saved.");
-        }
-    });
+QWidget * TakeQuiz::renderAnswer(QWidget *qqWidget)
+{
+    QWidget *widget;
+    QGridLayout *layout;
+
+    widget = new QWidget(qqWidget);
+    layout = new QGridLayout(widget);
+    layout->setContentsMargins(0,5,5,5);
+
+    return widget;
 }
 
 void TakeQuiz::renderQuestions()
@@ -100,7 +109,7 @@ void TakeQuiz::renderQuestions()
     QLayout *questionLayout = ui->scrollArea->widget()->layout();
 
     for (auto question : mQuiz->questions()) {
-        QuestionRenderer renderer = mRenderers[question->type()];
+        QuestionRenderer *renderer = generateRenderer(question);
 
         if (!renderer) {
             warn() << "Can not render questions of type " << question->type();
@@ -109,19 +118,16 @@ void TakeQuiz::renderQuestions()
 
         QWidget *qqWidget = new QWidget(this);
         QLayout *qqLayout = renderQuestion(question, qqWidget);
-
-        QWidget *answerWidget = new QWidget(qqWidget);
-        QGridLayout *answerLayout = new QGridLayout(answerWidget);
-        answerLayout->setContentsMargins(0,5,5,5);
+        QWidget *answerWidget = renderAnswer(qqWidget);
         qqLayout->addWidget(answerWidget);
+        renderer->render(answerWidget);
 
-        (this->*renderer)(question, answerWidget, answerLayout);
+        QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
+                         this, SLOT(saveAnswer(const QuizQuestion*)));
 
         question->setUserData<QWidget>("QWidget", qqWidget);
         questionLayout->addWidget(qqWidget);
         qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
-
-//        ui->scrollAreaWidgetContents->layout()->addWidget(qqWidget);
     }
 }
 
@@ -168,26 +174,6 @@ QLayout* TakeQuiz::renderQuestion(Canvas::QuizQuestion *qq, QWidget *widget)
     return layout;
 }
 
-void TakeQuiz::renderMultipleChoiceQuestion(QuizQuestion *baseQq, QWidget *widget, QLayout *layout)
-{
-    MultipleChoice* qq = static_cast<Canvas::QuizQuestions::MultipleChoice*>(baseQq);
-    QButtonGroup *answerButtons = new QButtonGroup(widget);
-
-    debug() << "Rendering a MultipleChoice question: " << qq->id();
-
-    for (auto answer : qq->answers()) {
-        QRadioButton *answerRadio = new QRadioButton(QString::fromStdString(answer->text()), widget);
-        answerRadio->setProperty("answerId", answer->id());
-        answerRadio->setProperty("qq", QVariant::fromValue(PQuizQuestion(qq)));
-        answerRadio->setChecked(qq->chosenAnswer() == answer);
-        layout->addWidget(answerRadio);
-        answerButtons->addButton(answerRadio);
-    }
-
-    QObject::connect(answerButtons, SIGNAL(buttonReleased(QAbstractButton*)),
-                     this, SLOT(chooseMultipleChoiceAnswer(QAbstractButton*)));
-}
-
 void TakeQuiz::submitQuiz()
 {
     QMessageBox confirmation;
@@ -229,4 +215,18 @@ void TakeQuiz::markQuestion(bool isMarked)
 
     qq->mark(isMarked);
     mQuizSubmission->save(qq, State::singleton().getSession());
+}
+
+void TakeQuiz::saveAnswer(QuizQuestion const* qq)
+{
+    Canvas::Session &session = State::singleton().getSession();
+
+    mQuizSubmission->save(qq, session, [&](bool success) {
+        if (success) {
+            setStatus("Answer saved.");
+        }
+        else {
+            setStatus("Error: answer could not saved.");
+        }
+    });
 }

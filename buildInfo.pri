@@ -14,33 +14,20 @@ MOC_DIR = $${BUILD_DIRECTORY}/$${TARGET}
 
 QMAKE_CXXFLAGS += -std=c++0x
 
-HEADERS  += \
-    $${ROOT_DIRECTORY}/qtCanvas/include/api_delegate.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/mainwindow.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/available_quizzes.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/login.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/state.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/viewport.h \
-    $${ROOT_DIRECTORY}/qtCanvas/include/type_exports.hpp \
-    $${ROOT_DIRECTORY}/qtCanvas/include/qproxy.hpp \
-    $${ROOT_DIRECTORY}/qtCanvas/include/take_quiz.hpp \
-    $${ROOT_DIRECTORY}/qtCanvas/include/qview.hpp
+INCLUDEPATH += $$cat($${ROOT_DIRECTORY}/qtCanvas/qtCanvas.includes)
+FILES = $$cat($${ROOT_DIRECTORY}/qtCanvas/qtCanvas.files)
 
-SOURCES += \
-    $${ROOT_DIRECTORY}/qtCanvas/src/mainwindow.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/available_quizzes.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/login.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/state.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/viewport.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/qproxy.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/take_quiz.cpp \
-    $${ROOT_DIRECTORY}/qtCanvas/src/qview.cpp
+HEADERS = $$find(FILES, "include/.*\.h(pp|xx)?")
+HEADERS = $$replace(HEADERS, "include","$${ROOT_DIRECTORY}/qtCanvas/include")
+HEADERS = $$unique(HEADERS)
 
-FORMS += \
-  $${ROOT_DIRECTORY}/qtCanvas/forms/mainwindow.ui \
-  $${ROOT_DIRECTORY}/qtCanvas/forms/available_quizzes.ui \
-  $${ROOT_DIRECTORY}/qtCanvas/forms/login.ui \
-  $${ROOT_DIRECTORY}/qtCanvas/forms/take_quiz.ui
+SOURCES = $$find(FILES, "src/.*\.c(pp|xx)?")
+SOURCES = $$replace(SOURCES, "src","$${ROOT_DIRECTORY}/qtCanvas/src")
+SOURCES = $$unique(SOURCES)
+
+FORMS = $$find(FILES, "forms/.*\.ui")
+FORMS = $$replace(FORMS, "forms","$${ROOT_DIRECTORY}/qtCanvas/forms")
+FORMS = $$unique(FORMS)
 
 win32:CONFIG(release, debug|release): LIBS += -lcanvas
 else:win32:CONFIG(debug, debug|release): LIBS += -lcanvas
