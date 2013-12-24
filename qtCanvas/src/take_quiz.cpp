@@ -27,6 +27,8 @@ TakeQuiz::~TakeQuiz()
 
 void TakeQuiz::setup()
 {
+    Canvas::Session &session = State::singleton().getSession();
+
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
 
@@ -38,11 +40,20 @@ void TakeQuiz::setup()
 
     debug() << "Rendering " << mQuiz->questions().size() << " questions";
 
-    mQuiz->loadQuestions(State::singleton().getSession(), [&](bool success) {
+    mQuiz->loadQuestions(session, [&](bool success) {
         if (success) {
-            renderQuestions();
+            mQuizSubmission->loadAnswers(session, [&](bool success) {
+                if (success) {
+                    renderQuestions();
+                    setStatus("Ready.");
+                }
+                else {
+                    setStatus("Error: unable to load answers.");
+                }
+            });
         }
         else {
+            setStatus("Error: unable to quiz questions.");
             error() << "Unable to load quiz questions.";
         }
     });
@@ -131,6 +142,7 @@ QLayout* TakeQuiz::renderQuestion(Canvas::QuizQuestion *qq, QWidget *widget)
 
     markButton->setIcon(QIcon::fromTheme("emblem-important"));
     markButton->setCheckable(true);
+    markButton->setChecked(qq->isMarked());
 
     titleLayout->setContentsMargins(5, 5, 5, 5);
 
@@ -167,6 +179,7 @@ void TakeQuiz::renderMultipleChoiceQuestion(QuizQuestion *baseQq, QWidget *widge
         QRadioButton *answerRadio = new QRadioButton(QString::fromStdString(answer->text()), widget);
         answerRadio->setProperty("answerId", answer->id());
         answerRadio->setProperty("qq", QVariant::fromValue(PQuizQuestion(qq)));
+        answerRadio->setChecked(qq->chosenAnswer() == answer);
         layout->addWidget(answerRadio);
         answerButtons->addButton(answerRadio);
     }
