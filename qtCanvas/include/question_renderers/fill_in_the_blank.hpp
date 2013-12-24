@@ -28,7 +28,7 @@ namespace QuestionRenderers {
     private slots:
         void fillAnswer();
 
-    private:
+    protected:
         QLineEdit *mEditor;
         FillInTheBlankQuestion* question() const;
     };

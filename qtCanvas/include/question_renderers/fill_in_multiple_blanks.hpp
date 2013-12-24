@@ -58,7 +58,6 @@ namespace QuestionRenderers {
         typedef std::vector<Fragment> Fragments;
         Fragments extractFragments(QString const&);
 
-        QLineEdit *mEditor;
         FillInMultipleBlanksQuestion* question() const;
         static const QRegExp gBlankPattern;
     };

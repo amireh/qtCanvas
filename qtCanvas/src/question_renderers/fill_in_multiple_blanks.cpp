@@ -12,7 +12,6 @@ namespace QuestionRenderers {
 
     FillInMultipleBlanks::~FillInMultipleBlanks()
     {
-
     }
 
     void FillInMultipleBlanks::render(QWidget *widget)
@@ -82,7 +81,6 @@ namespace QuestionRenderers {
         Fragments fragments;
         QRegExp const &pattern = gBlankPattern;
         int cursor = 0, lastCursor = 0;
-//        size_t nrBlanks = qq->blanks().size();
 
         while (cursor != -1) {
             Fragment fragment;

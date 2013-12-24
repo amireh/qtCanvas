@@ -6,6 +6,7 @@
 #include "question_renderers/true_false.hpp"
 #include "question_renderers/fill_in_the_blank.hpp"
 #include "question_renderers/fill_in_multiple_blanks.hpp"
+#include "question_renderers/essay.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -99,6 +100,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     }
     else if (qqType == "fill_in_multiple_blanks_question") {
         return new FillInMultipleBlanks(qq);
+    }
+    else if (qqType == "essay_question") {
+        return new Essay(qq);
     }
 
     return nullptr;

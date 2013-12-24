@@ -32,3 +32,7 @@ include/question_renderers/fill_in_the_blank.hpp
 src/question_renderers/fill_in_the_blank.cpp
 include/question_renderers/fill_in_multiple_blanks.hpp
 src/question_renderers/fill_in_multiple_blanks.cpp
+include/question_renderers/essay.hpp
+src/question_renderers/essay.cpp
+include/qtextedit.hpp
+src/qtextedit.cpp
