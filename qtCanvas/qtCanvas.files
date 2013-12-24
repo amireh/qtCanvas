@@ -38,3 +38,5 @@ include/qtextedit.hpp
 src/qtextedit.cpp
 include/question_renderers/calculated.hpp
 src/question_renderers/calculated.cpp
+include/question_renderers/numerical.hpp
+src/question_renderers/numerical.cpp

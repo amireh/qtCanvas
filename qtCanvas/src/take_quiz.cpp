@@ -8,6 +8,7 @@
 #include "question_renderers/fill_in_multiple_blanks.hpp"
 #include "question_renderers/essay.hpp"
 #include "question_renderers/calculated.hpp"
+#include "question_renderers/numerical.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -107,6 +108,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     }
     else if (qqType == "calculated_question") {
         return new Calculated(qq);
+    }
+    else if (qqType == "numerical_question") {
+        return new Numerical(qq);
     }
 
     return nullptr;

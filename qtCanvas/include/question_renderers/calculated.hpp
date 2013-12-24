@@ -33,6 +33,12 @@ namespace QuestionRenderers {
     protected:
         QLineEdit *mEditor;
         CalculatedQuestion* question() const;
+
+        /**
+         * Replace each occurrence of the formula variables with their values.
+         *
+         * The variables are in the form of [X].
+         */
         virtual void substitute(QString &);
     };
 }
