@@ -33,3 +33,16 @@ QLayout *QuestionRenderer::renderLayout(QWidget *answerWidget)
 
     return layout;
 }
+
+QWidget* QuestionRenderer::renderText(QWidget *widget, QString text) {
+    if (!text.size()) {
+        text = QString::fromStdString(mQuestion->text());
+    }
+    // Question text:
+    // [= %text =]
+    QLabel *textLabel = new QLabel(text, widget);
+    textLabel->setContentsMargins(5,5,5,5);
+    textLabel->setTextFormat(Qt::RichText);
+
+    return textLabel;
+}

@@ -46,9 +46,6 @@ public:
 
     virtual QuestionRenderer* generateRenderer(QuizQuestion *);
 
-protected:
-    QWidget *renderQuestionText(const QuizQuestion *qq, QWidget *widget);
-
 private slots:
     void submitQuiz();
     void markQuestion(bool);

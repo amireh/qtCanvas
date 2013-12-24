@@ -7,6 +7,7 @@
 #include "question_renderers/fill_in_the_blank.hpp"
 #include "question_renderers/fill_in_multiple_blanks.hpp"
 #include "question_renderers/essay.hpp"
+#include "question_renderers/calculated.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -104,6 +105,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     else if (qqType == "essay_question") {
         return new Essay(qq);
     }
+    else if (qqType == "calculated_question") {
+        return new Calculated(qq);
+    }
 
     return nullptr;
 }
@@ -126,7 +130,7 @@ void TakeQuiz::renderQuestions()
         QWidget *answerWidget = renderer->renderFrame(qqWidget);
 
         if (renderer->hasRenderableText()) {
-            qqLayout->addWidget(renderQuestionText(question, qqWidget));
+            qqLayout->addWidget(renderer->renderText(qqWidget));
         }
 
         qqLayout->addWidget(answerWidget);
@@ -177,17 +181,6 @@ QLayout* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget
                      this, SLOT(markQuestion(bool)));
 
     return layout;
-}
-
-QWidget* TakeQuiz::renderQuestionText(QuizQuestion const* qq, QWidget *widget) {
-
-    // Question text:
-    // [= %text =]
-    QLabel *textLabel = new QLabel(QString::fromStdString(qq->text()), widget);
-    textLabel->setContentsMargins(5,5,5,5);
-    textLabel->setTextFormat(Qt::RichText);
-
-    return textLabel;
 }
 
 void TakeQuiz::submitQuiz()

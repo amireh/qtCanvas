@@ -36,3 +36,5 @@ include/question_renderers/essay.hpp
 src/question_renderers/essay.cpp
 include/qtextedit.hpp
 src/qtextedit.cpp
+include/question_renderers/calculated.hpp
+src/question_renderers/calculated.cpp
