@@ -56,7 +56,17 @@ void State::setActiveQuiz(Canvas::Quiz *quiz)
     mActiveQuiz = quiz;
 }
 
+void State::setActiveQuizSubmission(Canvas::QuizSubmission *qs)
+{
+    mActiveQuizSubmission = qs;
+}
+
 Canvas::Quiz *State::activeQuiz()
 {
     return mActiveQuiz;
+}
+
+Canvas::QuizSubmission *State::activeQuizSubmission()
+{
+    return mActiveQuizSubmission;
 }

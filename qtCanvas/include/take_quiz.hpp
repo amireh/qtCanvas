@@ -7,6 +7,8 @@
 #include <QButtonGroup>
 #include <QAbstractButton>
 #include <QMessageBox>
+#include <QToolButton>
+#include <QCheckBox>
 
 #include "include/qview.hpp"
 #include "include/state.h"
@@ -15,6 +17,8 @@
 #include <canvas/resources/quiz_question.hpp>
 #include <canvas/resources/quiz_question_answer.hpp>
 #include <canvas/resources/quiz_questions/multiple_choice.hpp>
+#include <canvas/resources/quiz_submission_entry.hpp>
+#include <canvas/resources/quiz_submission_answers/multiple_choice.hpp>
 #include <map>
 #include <functional>
 
@@ -23,6 +27,9 @@ class TakeQuiz;
 }
 
 using Canvas::QuizQuestion;
+
+typedef Canvas::QuizQuestions::MultipleChoice MultipleChoiceQuestion;
+typedef Canvas::QuizSubmissionAnswers::MultipleChoice MultipleChoiceAnswer;
 
 class TakeQuiz : public QView, public Canvas::Logger
 {
@@ -38,10 +45,11 @@ public:
 private slots:
     void chooseMultipleChoiceAnswer(QAbstractButton*);
     void submitQuiz();
+    void markQuestion(bool);
 private:
     QTCANVAS_EXPORTS
 
-    typedef void (TakeQuiz::*QuestionRenderer)(QuizQuestion*, QWidget*);
+    typedef void (TakeQuiz::*QuestionRenderer)(QuizQuestion*, QWidget*, QLayout*);
 
     Ui::TakeQuiz *ui;
     Canvas::Quiz *mQuiz;
@@ -50,7 +58,8 @@ private:
     std::map<Canvas::String, QuestionRenderer> mRenderers;
 
     void renderQuestions();
-    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*);
+    QLayout* renderQuestion(QuizQuestion*, QWidget*);
+    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*, QLayout*);
 };
 
 #endif // TAKE_QUIZ_HPP

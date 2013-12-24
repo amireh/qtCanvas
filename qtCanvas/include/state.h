@@ -10,6 +10,7 @@
 #include <canvas/resources/student.hpp>
 #include <canvas/resources/course.hpp>
 #include <canvas/resources/quiz.hpp>
+#include <canvas/resources/quiz_submission.hpp>
 #include <vector>
 
 class State : public QObject, public Canvas::Logger
@@ -29,7 +30,10 @@ public:
     void reset(bool shuttingDown = false);
 
     void setActiveQuiz(Canvas::Quiz*);
+    void setActiveQuizSubmission(Canvas::QuizSubmission*);
+
     Canvas::Quiz* activeQuiz();
+    Canvas::QuizSubmission* activeQuizSubmission();
 signals:
     void loggedOut();
 
@@ -41,6 +45,7 @@ private:
     Canvas::Student *mStudent;
     Canvas::Session mSession;
     Canvas::Quiz *mActiveQuiz;
+    Canvas::QuizSubmission *mActiveQuizSubmission;
 };
 
 #endif // STATE_H

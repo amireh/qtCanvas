@@ -28,7 +28,22 @@
   <layout class="QGridLayout" name="gridLayout">
    <item row="0" column="0">
     <widget class="QFrame" name="verticalFrame">
-     <layout class="QVBoxLayout" name="questionLayout">
+     <layout class="QVBoxLayout" name="quizLayout">
+      <property name="spacing">
+       <number>5</number>
+      </property>
+      <property name="leftMargin">
+       <number>0</number>
+      </property>
+      <property name="topMargin">
+       <number>0</number>
+      </property>
+      <property name="rightMargin">
+       <number>0</number>
+      </property>
+      <property name="bottomMargin">
+       <number>0</number>
+      </property>
       <item>
        <widget class="QLabel" name="quizTitleLabel">
         <property name="sizePolicy">
@@ -70,16 +85,19 @@
       </item>
       <item>
        <widget class="QScrollArea" name="scrollArea">
+        <property name="frameShape">
+         <enum>QFrame::NoFrame</enum>
+        </property>
         <property name="widgetResizable">
          <bool>true</bool>
         </property>
-        <widget class="QWidget" name="questionLayout_2">
+        <widget class="QWidget" name="questionLayout">
          <property name="geometry">
           <rect>
            <x>0</x>
            <y>0</y>
-           <width>380</width>
-           <height>225</height>
+           <width>384</width>
+           <height>229</height>
           </rect>
          </property>
         </widget>

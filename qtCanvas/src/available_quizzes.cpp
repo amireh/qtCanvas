@@ -24,8 +24,10 @@ AvailableQuizzes::AvailableQuizzes(QWidget *parent) :
 
     QObject::connect(&State::singleton(), SIGNAL(loggedOut()),
                      this, SLOT(reset()));
-    QObject::connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*, QTreeWidgetItem*)),
-                     this, SLOT(updateQuizActions(QTreeWidgetItem*,QTreeWidgetItem*)));
+    QObject::connect(ui->treeWidget, SIGNAL(currentItemChanged(QTreeWidgetItem*,
+                                                               QTreeWidgetItem*)),
+                     this, SLOT(updateQuizActions(QTreeWidgetItem*,
+                                                  QTreeWidgetItem*)));
 
     QObject::connect(this, SIGNAL(courseLoaded(Canvas::Course const&)),
                      this, SLOT(loadCourseQuizzes(Canvas::Course const&)));
@@ -176,11 +178,9 @@ void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetIt
     }
 }
 
-
 void AvailableQuizzes::reset() {
     ui->treeWidget->clear();
 }
-
 
 void AvailableQuizzes::loadCourseQuizzes(Canvas::Course const &course)
 {
@@ -235,7 +235,6 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::Quiz &quiz)
     treeItem->setText(1, status);
 }
 
-
 void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
 {
     QString status;
@@ -282,6 +281,8 @@ void AvailableQuizzes::takeQuiz()
         student.takeQuiz(session, **selectedQuiz, [&](QuizSubmission const* qs) {
             if (qs) {
                 State::singleton().setActiveQuiz(*selectedQuiz);
+                State::singleton().setActiveQuizSubmission((QuizSubmission*)qs);
+
                 Viewport::singleton().transition("TakeQuiz");
             }
             else {

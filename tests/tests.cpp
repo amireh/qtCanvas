@@ -48,6 +48,34 @@ void Tests::createQuestionWidgets()
     QVERIFY(quiz.questions().front()->userData<QWidget>("QWidget") == NULL);
 }
 
+void Tests::populatesMultipleChoiceQuestionAnswers()
+{
+    TakeQuiz view;
+    Canvas::Course course(1);
+    Canvas::Quiz quiz(1, &course);
+    Canvas::QuizSubmission qs(1, &quiz);
+
+    quiz.deserialize(loadFixture("quiz.json"));
+    quiz.loadQuestions(loadFixture("quiz_questions.json"));
+    qs.deserialize(loadFixture("quiz_submission.json"));
+
+    State::singleton().setActiveQuiz(&quiz);
+    State::singleton().setActiveQuizSubmission(&qs);
+
+    view.setup();
+    view.renderQuestions();
+
+    QWidget *questionGroupBox =
+            quiz.questions().front()->userData<QWidget>("QWidget");
+    QVERIFY(questionGroupBox != NULL);
+
+    QButtonGroup *answerButtonGroup =
+            questionGroupBox->findChild<QButtonGroup*>();
+    QVERIFY(answerButtonGroup != NULL);
+
+    view.cleanup();
+}
+
 int main(int argc, char *argv[])
 {
     int rc;
