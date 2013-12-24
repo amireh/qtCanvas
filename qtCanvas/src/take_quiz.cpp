@@ -5,6 +5,7 @@
 #include "question_renderers/multiple_choice.hpp"
 #include "question_renderers/true_false.hpp"
 #include "question_renderers/fill_in_the_blank.hpp"
+#include "question_renderers/fill_in_multiple_blanks.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -94,23 +95,15 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
         return new TrueFalse(qq);
     }
     else if (qqType == "short_answer_question") {
-        return new FillInTheBlank   (qq);
+        return new FillInTheBlank(qq);
+    }
+    else if (qqType == "fill_in_multiple_blanks_question") {
+        return new FillInMultipleBlanks(qq);
     }
 
     return nullptr;
 }
 
-QWidget * TakeQuiz::renderAnswer(QWidget *qqWidget)
-{
-    QWidget *widget;
-    QGridLayout *layout;
-
-    widget = new QWidget(qqWidget);
-    layout = new QGridLayout(widget);
-    layout->setContentsMargins(0,5,5,5);
-
-    return widget;
-}
 
 void TakeQuiz::renderQuestions()
 {
@@ -125,9 +118,15 @@ void TakeQuiz::renderQuestions()
         }
 
         QWidget *qqWidget = new QWidget(this);
-        QLayout *qqLayout = renderQuestion(question, qqWidget);
-        QWidget *answerWidget = renderAnswer(qqWidget);
+        QLayout *qqLayout = renderQuestionFrame(question, qqWidget);
+        QWidget *answerWidget = renderer->renderFrame(qqWidget);
+
+        if (renderer->hasRenderableText()) {
+            qqLayout->addWidget(renderQuestionText(question, qqWidget));
+        }
+
         qqLayout->addWidget(answerWidget);
+
         renderer->render(answerWidget);
 
         QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
@@ -139,7 +138,7 @@ void TakeQuiz::renderQuestions()
     }
 }
 
-QLayout* TakeQuiz::renderQuestion(Canvas::QuizQuestion *qq, QWidget *widget)
+QLayout* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
 {
     QGridLayout *layout = new QGridLayout(widget);
 
@@ -168,18 +167,23 @@ QLayout* TakeQuiz::renderQuestion(Canvas::QuizQuestion *qq, QWidget *widget)
     titleWidget->setFrameShape(QFrame::Box);
     titleWidget->setFrameShadow(QFrame::Sunken);
 
-    // Question text:
-    // [= %text =]
-    QLabel *textLabel = new QLabel(QString::fromStdString(qq->text()), widget);
-    textLabel->setContentsMargins(5,5,5,5);
-
     layout->addWidget(titleWidget);
-    layout->addWidget(textLabel);
 
     QObject::connect(markButton, SIGNAL(toggled(bool)),
                      this, SLOT(markQuestion(bool)));
 
     return layout;
+}
+
+QWidget* TakeQuiz::renderQuestionText(QuizQuestion const* qq, QWidget *widget) {
+
+    // Question text:
+    // [= %text =]
+    QLabel *textLabel = new QLabel(QString::fromStdString(qq->text()), widget);
+    textLabel->setContentsMargins(5,5,5,5);
+    textLabel->setTextFormat(Qt::RichText);
+
+    return textLabel;
 }
 
 void TakeQuiz::submitQuiz()

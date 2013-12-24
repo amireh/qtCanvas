@@ -30,3 +30,5 @@ include/question_renderers/true_false.hpp
 src/question_renderers/true_false.cpp
 include/question_renderers/fill_in_the_blank.hpp
 src/question_renderers/fill_in_the_blank.cpp
+include/question_renderers/fill_in_multiple_blanks.hpp
+src/question_renderers/fill_in_multiple_blanks.cpp

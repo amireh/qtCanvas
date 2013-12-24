@@ -46,6 +46,9 @@ public:
 
     virtual QuestionRenderer* generateRenderer(QuizQuestion *);
 
+protected:
+    QWidget *renderQuestionText(const QuizQuestion *qq, QWidget *widget);
+
 private slots:
     void submitQuiz();
     void markQuestion(bool);
@@ -61,8 +64,8 @@ private:
     Renderers mRenderers;
 
     void renderQuestions();
-    QLayout* renderQuestion(QuizQuestion*, QWidget*);
-    QWidget * renderAnswer(QWidget *qqWidget);
+    QLayout* renderQuestionFrame(QuizQuestion*, QWidget*);
+    QWidget * renderAnswerFrame(QWidget *qqWidget);
 //    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*, QLayout*);
 };
 
