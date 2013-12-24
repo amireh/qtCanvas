@@ -3,6 +3,7 @@
 #include "include/viewport.h"
 #include "ui_take_quiz.h"
 #include "question_renderers/multiple_choice.hpp"
+#include "question_renderers/true_false.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -87,6 +88,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
 
     if (qqType == "multiple_choice_question") {
         return new MultipleChoice(qq);
+    }
+    else if (qqType == "true_false_question") {
+        return new TrueFalse(qq);
     }
 
     return nullptr;

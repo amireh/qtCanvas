@@ -26,3 +26,5 @@ forms/take_quiz.ui
 forms/mainwindow.ui
 forms/login.ui
 forms/available_quizzes.ui
+include/question_renderers/true_false.hpp
+src/question_renderers/true_false.cpp
