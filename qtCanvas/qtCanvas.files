@@ -28,3 +28,5 @@ forms/login.ui
 forms/available_quizzes.ui
 include/question_renderers/true_false.hpp
 src/question_renderers/true_false.cpp
+include/question_renderers/fill_in_the_blank.hpp
+src/question_renderers/fill_in_the_blank.cpp

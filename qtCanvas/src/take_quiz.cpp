@@ -4,6 +4,7 @@
 #include "ui_take_quiz.h"
 #include "question_renderers/multiple_choice.hpp"
 #include "question_renderers/true_false.hpp"
+#include "question_renderers/fill_in_the_blank.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -91,6 +92,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     }
     else if (qqType == "true_false_question") {
         return new TrueFalse(qq);
+    }
+    else if (qqType == "short_answer_question") {
+        return new FillInTheBlank   (qq);
     }
 
     return nullptr;
