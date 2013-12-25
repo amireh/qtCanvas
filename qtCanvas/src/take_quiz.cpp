@@ -11,6 +11,7 @@
 #include "question_renderers/numerical.hpp"
 #include "question_renderers/matching.hpp"
 #include "question_renderers/multiple_dropdowns.hpp"
+#include "question_renderers/multiple_answers.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -119,6 +120,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     }
     else if (qqType == "multiple_dropdowns_question") {
         return new MultipleDropdowns(qq);
+    }
+    else if (qqType == "multiple_answers_question") {
+        return new MultipleAnswers(qq);
     }
 
     return nullptr;
