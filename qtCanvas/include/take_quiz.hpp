@@ -17,8 +17,6 @@
 #include <canvas/resources/quiz_question.hpp>
 #include <canvas/resources/quiz_question_answer.hpp>
 #include <canvas/resources/quiz_questions/multiple_choice.hpp>
-#include <canvas/resources/quiz_submission_entry.hpp>
-#include <canvas/resources/quiz_submission_answers/multiple_choice.hpp>
 #include <map>
 #include <functional>
 
@@ -31,7 +29,6 @@ class TakeQuiz;
 using Canvas::QuizQuestion;
 
 typedef Canvas::QuizQuestions::MultipleChoice MultipleChoiceQuestion;
-typedef Canvas::QuizSubmissionAnswers::MultipleChoice MultipleChoiceAnswer;
 
 class TakeQuiz : public QView, public Canvas::Logger
 {
