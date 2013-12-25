@@ -1,10 +1,13 @@
-*.swp
-
 [QTC stuff]
 *.user
 *.autosave
 
 [build]
 /build
-/bin/!.gitkeep
 /bin/*
+!/bin/.gitkeep
+!/bin/deploy-osx.sh
+
+[env]
+.DS_Store
+*.swp
