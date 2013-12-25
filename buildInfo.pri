@@ -14,7 +14,14 @@ MOC_DIR = $${BUILD_DIRECTORY}/$${TARGET}
 
 QMAKE_CXXFLAGS += -std=c++0x
 
-INCLUDEPATH += $$cat($${ROOT_DIRECTORY}/qtCanvas/qtCanvas.includes)
+macx {
+    QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
+    QMAKE_CXXFLAGS += -stdlib=libc++
+    LIBPATH += /usr/local/lib
+    INCLUDEPATH += /usr/local/include # for libcanvas / libjsoncpp
+}
+
+INCLUDEPATH += $${ROOT_DIRECTORY}/qtCanvas/include
 FILES = $$cat($${ROOT_DIRECTORY}/qtCanvas/qtCanvas.files)
 
 HEADERS = $$find(FILES, "include/.*\.h(pp|xx)?")
