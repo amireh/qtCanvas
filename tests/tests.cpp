@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
 
     Tests tc;
 
-    MainWindow mainWindow;
+    MainWindow mainWindow(nullptr, app);
 //    mainWindow.show();
 
     QTEST_DISABLE_KEYPAD_NAVIGATION

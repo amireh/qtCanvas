@@ -142,6 +142,7 @@ void TakeQuiz::renderQuestions()
         }
 
         QWidget *qqWidget = new QWidget(this);
+        qqWidget->setObjectName("qq");
         QLayout *qqLayout = renderQuestionFrame(question, qqWidget);
         QWidget *answerWidget = renderer->renderFrame(qqWidget);
 
@@ -182,14 +183,14 @@ QLayout* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget
     markButton->setChecked(qq->isMarked());
 
     titleLayout->setContentsMargins(5, 5, 5, 5);
-
     titleLayout->addWidget(titleLabel, 0, Qt::AlignLeft);
     titleLayout->addWidget(markButton, 0, Qt::AlignRight);
     titleLayout->addWidget(pointsLabel, 0, Qt::AlignRight);
 
+    titleWidget->setObjectName("qqTitle");
     titleWidget->setLayout(titleLayout);
-    titleWidget->setFrameShape(QFrame::Box);
-    titleWidget->setFrameShadow(QFrame::Sunken);
+//    titleWidget->setFrameShape(QFrame::Box);
+//    titleWidget->setFrameShadow(QFrame::Sunken);
 
     layout->addWidget(titleWidget);
 

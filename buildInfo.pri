@@ -32,6 +32,8 @@ SOURCES = $$find(FILES, "src/.*\.c(pp|xx)?")
 SOURCES = $$replace(SOURCES, "src","$${ROOT_DIRECTORY}/qtCanvas/src")
 SOURCES = $$unique(SOURCES)
 
+RESOURCES = $${ROOT_DIRECTORY}/qtCanvas/resources/qtCanvas.qrc
+
 FORMS = $$find(FILES, "forms/.*\.ui")
 FORMS = $$replace(FORMS, "forms","$${ROOT_DIRECTORY}/qtCanvas/forms")
 FORMS = $$unique(FORMS)

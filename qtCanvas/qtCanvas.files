@@ -46,3 +46,5 @@ include/question_renderers/multiple_dropdowns.hpp
 src/question_renderers/multiple_dropdowns.cpp
 include/question_renderers/multiple_answers.hpp
 src/question_renderers/multiple_answers.cpp
+resources/qtCanvas.qrc
+resources/qtCanvas.css

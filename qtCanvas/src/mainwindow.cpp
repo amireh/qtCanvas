@@ -2,8 +2,9 @@
 #include "ui_mainwindow.h"
 #include "include/state.h"
 
-MainWindow::MainWindow(QWidget *parent) :
+MainWindow::MainWindow(QWidget *parent, QApplication &app) :
     QMainWindow(parent),
+    mApplication(app),
     ui(new Ui::MainWindow)
 {
     Viewport &viewport = Viewport::singleton();
@@ -18,6 +19,13 @@ MainWindow::MainWindow(QWidget *parent) :
     viewport.registerView("Login", []() -> QView* { return new Login; });
     viewport.registerView("AvailableQuizzes", []() -> QView* { return new AvailableQuizzes; });
     viewport.registerView("TakeQuiz", []() -> QView* { return new TakeQuiz; });
+
+    QFile css(":/qtCanvas.css");
+
+    if (css.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        mApplication.setStyleSheet(css.readAll());
+        css.close();
+    }
 }
 
 MainWindow::~MainWindow()

@@ -19,7 +19,7 @@ int main(int argc, char *argv[])
     app.setOrganizationName("Instructure");
     app.setApplicationName("qtCanvas");
 
-    MainWindow w;
+    MainWindow w(nullptr, app);
     w.show();
 
     Viewport::singleton().transition("Login");

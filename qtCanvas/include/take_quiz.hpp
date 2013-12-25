@@ -54,13 +54,12 @@ private:
     Canvas::Quiz *mQuiz;
     Canvas::QuizSubmission *mQuizSubmission;
 
-//    std::map<Canvas::String, QuestionRenderer*> mRenderers;
     Renderers mRenderers;
 
     void renderQuestions();
     QLayout* renderQuestionFrame(QuizQuestion*, QWidget*);
     QWidget * renderAnswerFrame(QWidget *qqWidget);
-//    void renderMultipleChoiceQuestion(QuizQuestion*, QWidget*, QLayout*);
+
 };
 
 #endif // TAKE_QUIZ_HPP
