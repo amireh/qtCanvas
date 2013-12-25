@@ -9,6 +9,7 @@
 #include "question_renderers/essay.hpp"
 #include "question_renderers/calculated.hpp"
 #include "question_renderers/numerical.hpp"
+#include "question_renderers/matching.hpp"
 
 //using namespace Canvas::QuizQuestions;
 using Canvas::Quiz;
@@ -111,6 +112,9 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     }
     else if (qqType == "numerical_question") {
         return new Numerical(qq);
+    }
+    else if (qqType == "matching_question") {
+        return new Matching(qq);
     }
 
     return nullptr;

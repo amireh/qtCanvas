@@ -40,3 +40,5 @@ include/question_renderers/calculated.hpp
 src/question_renderers/calculated.cpp
 include/question_renderers/numerical.hpp
 src/question_renderers/numerical.cpp
+include/question_renderers/matching.hpp
+src/question_renderers/matching.cpp

@@ -6,7 +6,8 @@ using Canvas::Course;
 State* State::ginstance = nullptr;
 
 State::State() : Logger("qtCanvas"), mStudent(nullptr) {
-    Canvas::Settings::set("canvas_host", "http://kodoware.com");
+//    Canvas::Settings::set("canvas_host", "http://kodoware.com");
+    Canvas::Settings::set("canvas_host", "http://localhost");
     Canvas::Settings::set("canvas_port", "3000");
 
     reset();
