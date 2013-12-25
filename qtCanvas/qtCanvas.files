@@ -42,3 +42,5 @@ include/question_renderers/numerical.hpp
 src/question_renderers/numerical.cpp
 include/question_renderers/matching.hpp
 src/question_renderers/matching.cpp
+include/question_renderers/multiple_dropdowns.hpp
+src/question_renderers/multiple_dropdowns.cpp
