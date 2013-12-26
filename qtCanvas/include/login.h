@@ -19,6 +19,8 @@ public:
 private slots:
     void on_btnLogin_clicked();
 
+    void on_txtToken_returnPressed();
+
 private:
     Ui::Login *ui;
 };

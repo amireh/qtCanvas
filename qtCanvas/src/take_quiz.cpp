@@ -45,13 +45,10 @@ void TakeQuiz::setup()
 
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
-
-    QVBoxLayout *scrollLayout = new QVBoxLayout;
-    ui->scrollArea->setLayout(scrollLayout);
-    ui->scrollArea->widget()->setLayout(scrollLayout);
+    mQuestionIndex = new QuestionIndex(ui->indexFrame);
 
     ui->quizTitleLabel->setText(QString::fromStdString(mQuiz->title()));
-
+    ui->indexFrame->layout()->addWidget(mQuestionIndex);
     debug() << "Rendering " << mQuiz->questions().size() << " questions";
 
     mQuiz->loadQuestions(session, [&](bool success) {
@@ -65,6 +62,7 @@ void TakeQuiz::setup()
                     setStatus("Error: unable to load answers.");
                 }
             });
+            mQuestionIndex->render(mQuiz->questions());
         }
         else {
             setStatus("Error: unable to quiz questions.");
@@ -86,6 +84,7 @@ void TakeQuiz::cleanup()
     }
 
     mQuiz = nullptr;
+    mQuizSubmission = nullptr;
 }
 
 QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
@@ -134,70 +133,95 @@ void TakeQuiz::renderQuestions()
     QLayout *questionLayout = ui->scrollArea->widget()->layout();
 
     for (auto question : mQuiz->questions()) {
-        QuestionRenderer *renderer = generateRenderer(question);
+        QWidget *qqWidget = renderQuestion(question);
 
-        if (!renderer) {
-            warn() << "Can not render questions of type " << question->type();
-            continue;
+        if (qqWidget) {
+            questionLayout->addWidget(qqWidget);
         }
-
-        QWidget *qqWidget = new QWidget(this);
-        qqWidget->setObjectName("qq");
-        QLayout *qqLayout = renderQuestionFrame(question, qqWidget);
-        QWidget *answerWidget = renderer->renderFrame(qqWidget);
-
-        if (renderer->hasRenderableText()) {
-            qqLayout->addWidget(renderer->renderText(qqWidget));
-        }
-
-        qqLayout->addWidget(answerWidget);
-
-        renderer->render(answerWidget);
-
-        QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
-                         this, SLOT(saveAnswer(const QuizQuestion*)));
-
-        question->setUserData<QWidget>("QWidget", qqWidget);
-        questionLayout->addWidget(qqWidget);
-        qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
     }
 }
 
-QLayout* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
+QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
+    QWidget *qqWidget;
+    QFrame *qqTitleFrame;
+    QLayout *qqLayout;
+    QWidget *answerWidget;
+    QuestionRenderer *renderer;
+
+    renderer = generateRenderer(question);
+
+    if (!renderer) {
+        warn() << "Can not render questions of type " << question->type();
+        return nullptr;
+    }
+
+    qqWidget = new QWidget(this);
+    qqLayout = new QGridLayout(qqWidget);
+
+    qqTitleFrame = renderQuestionFrame(question, qqWidget);
+    answerWidget = renderer->renderFrame(qqWidget);
+
+    qqLayout->addWidget(qqTitleFrame);
+
+    if (renderer->hasRenderableText()) {
+        qqLayout->addWidget(renderer->renderText(qqWidget));
+    }
+
+    qqLayout->addWidget(answerWidget);
+
+    renderer->render(answerWidget);
+
+    QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
+                     this, SLOT(saveAnswer(const QuizQuestion*)));
+
+    qqWidget->setObjectName("qq");
+    qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
+    question->setUserData<QWidget>("QWidget", qqWidget);
+
+    return qqWidget;
+}
+
+QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
 {
-    QGridLayout *layout = new QGridLayout(widget);
+    QString qqTitle;
+    QFrame *titleWidget;
+    QHBoxLayout *titleLayout;
+    QLabel *titleLabel;
+    QLabel *pointsLabel;
+
+//    qqTitle = QString::fromStdString(qq->name();
+    qqTitle = QString("Question %1").arg(qq->position());
 
     // Question title widget:
     // [= %questionName "%questionPts pts" =]
-    QFrame *titleWidget = new QFrame(widget);
-    QHBoxLayout *titleLayout = new QHBoxLayout;
-    QLabel *titleLabel =
-            new QLabel(QString::fromStdString(qq->name()), titleWidget);
-    QLabel *pointsLabel =
-            new QLabel(QString("%1 pts").arg(qq->pointsPossible()), titleWidget);
-    QToolButton *markButton =
-            new QToolButton(titleWidget);
+    titleWidget = new QFrame(widget);
+    titleLayout = new QHBoxLayout(titleWidget);
+    titleLabel = new QLabel(qqTitle, titleWidget);
+    pointsLabel =  new QLabel(QString("%1 pts").arg(qq->pointsPossible()),
+                              titleWidget);
+
+    titleLayout->setContentsMargins(0,0,0,0);
+    titleLayout->addWidget(titleLabel, 0, Qt::AlignLeft);
+    titleLayout->addWidget(pointsLabel, 0, Qt::AlignRight);
+
+    titleWidget->setObjectName("qqTitle");
+
+
+    return titleWidget;
+}
+
+QWidget *TakeQuiz::renderMarkButton(QuizQuestion const* qq, QWidget *widget)
+{
+    QToolButton *markButton = new QToolButton(widget);
 
     markButton->setIcon(QIcon::fromTheme("emblem-important"));
     markButton->setCheckable(true);
     markButton->setChecked(qq->isMarked());
 
-    titleLayout->setContentsMargins(5, 5, 5, 5);
-    titleLayout->addWidget(titleLabel, 0, Qt::AlignLeft);
-    titleLayout->addWidget(markButton, 0, Qt::AlignRight);
-    titleLayout->addWidget(pointsLabel, 0, Qt::AlignRight);
-
-    titleWidget->setObjectName("qqTitle");
-    titleWidget->setLayout(titleLayout);
-//    titleWidget->setFrameShape(QFrame::Box);
-//    titleWidget->setFrameShadow(QFrame::Sunken);
-
-    layout->addWidget(titleWidget);
-
     QObject::connect(markButton, SIGNAL(toggled(bool)),
                      this, SLOT(markQuestion(bool)));
 
-    return layout;
+    return markButton;
 }
 
 void TakeQuiz::submitQuiz()

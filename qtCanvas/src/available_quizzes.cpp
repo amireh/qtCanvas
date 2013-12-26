@@ -71,6 +71,8 @@ void AvailableQuizzes::setup()
                         "api_error");
         }
     });
+
+    ui->treeWidget->setFocus();
 }
 
 void AvailableQuizzes::cleanup()
@@ -96,6 +98,10 @@ QTreeWidgetItem* AvailableQuizzes::addCourse(Canvas::Course const &course, bool 
     courseItem->setText(0, QString::fromStdString(course.name()));
 
     ui->treeWidget->addTopLevelItem(courseItem);
+
+    if (ui->treeWidget->selectedItems().empty()) {
+        ui->treeWidget->setCurrentItem(courseItem);
+    }
 
     debug() << "new tree item for course#" << course.id();
 
@@ -272,10 +278,11 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
 void AvailableQuizzes::takeQuiz()
 {
     PQuiz selectedQuiz = ui->treeWidget->currentItem()->data(100, 0x0100).value<PQuiz>();
-    Canvas::Student &student = State::singleton().getStudent();
-    Canvas::Session &session = State::singleton().getSession();
 
     if (selectedQuiz) {
+        Canvas::Student &student = State::singleton().getStudent();
+        Canvas::Session &session = State::singleton().getSession();
+
         setStatus("Requesting a quiz-taking session...");
 
         student.takeQuiz(session, **selectedQuiz, [&](QuizSubmission const* qs) {
@@ -291,4 +298,3 @@ void AvailableQuizzes::takeQuiz()
         });
     }
 }
-

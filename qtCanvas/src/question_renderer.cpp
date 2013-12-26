@@ -29,7 +29,7 @@ QLayout *QuestionRenderer::renderLayout(QWidget *answerWidget)
     QGridLayout *layout;
 
     layout = new QGridLayout(answerWidget);
-    layout->setContentsMargins(0,5,5,5);
+    layout->setContentsMargins(0,0,0,0);
 
     return layout;
 }

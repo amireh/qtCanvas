@@ -1,0 +1,22 @@
+{
+    "attempt": 15,
+    "end_at": null,
+    "extra_attempts": null,
+    "extra_time": null,
+    "finished_at": null,
+    "fudge_points": null,
+    "id": 1,
+    "kept_score": 6.16666666666667,
+    "quiz_id": 1,
+    "quiz_points_possible": 12,
+    "quiz_version": 8,
+    "score": null,
+    "score_before_regrade": null,
+    "started_at": "2013-12-23T11:55:14Z",
+    "submission_id": 1,
+    "user_id": 2,
+    "validation_token": "37a09785de80dc1a9b04c3ba495cf6df92fc6fd1a0535ec9eb9b7bb5092991c5",
+    "workflow_state": "untaken",
+    "time_spent": null,
+    "html_url": "http://localhost:3000/courses/1/quizzes/1/submissions/1"
+}

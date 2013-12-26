@@ -3,6 +3,18 @@ QWidget#qq {
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-QWidget#qqTitle {
-  border-bottom: 1px solid rgb(255,0,0);
+QFrame#qqTitle {
+  border: 1px solid rgba(0,0,0,0.1);
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  padding-bottom: 5px;
+}
+
+QFrame#qqTitle QLabel {
+  font-weight: bold;
+}
+
+QLabel#quizTitleLabel {
+  padding-bottom: 5px;
 }

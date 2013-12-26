@@ -22,3 +22,6 @@ DEPENDPATH += \
 HEADERS += tests.hpp
 SOURCES -= $${ROOT_DIRECTORY}/qtCanvas/src/main.cpp
 SOURCES += tests.cpp
+
+RESOURCES += \
+    tests.qrc

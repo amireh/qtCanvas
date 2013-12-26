@@ -48,3 +48,6 @@ include/question_renderers/multiple_answers.hpp
 src/question_renderers/multiple_answers.cpp
 resources/qtCanvas.qrc
 resources/qtCanvas.css
+include/widgets/question_index.hpp
+src/widgets/question_index.cpp
+widgets/question_index.ui

@@ -2,6 +2,7 @@
 #include "include/take_quiz.hpp"
 #include "include/mainwindow.h"
 #include "include/type_exports.hpp"
+#include <iostream>
 
 Tests::Tests()
 {
@@ -20,10 +21,17 @@ void Tests::cleanupTestCase()
 {
 }
 
-Canvas::String Tests::loadFixture(Canvas::String const& path) {
-  Canvas::String out;
-  Canvas::FileManager::singleton().load_file("../tests/fixture/" + path, out);
-  return out;
+String Tests::loadFixture(const QString &path) {
+
+    QFile fixture(":/fixture/" + path);
+    QString out;
+
+    if (fixture.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        out = fixture.readAll();
+        fixture.close();
+    }
+
+    return out.toStdString();
 }
 
 void Tests::createQuestionWidgets()
@@ -32,6 +40,7 @@ void Tests::createQuestionWidgets()
     Canvas::Course course(1);
     Canvas::Quiz quiz(1, &course);
 
+    std::cout << loadFixture("quiz.json");
     quiz.deserialize(loadFixture("quiz.json"));
     quiz.loadQuestions(loadFixture("quiz_questions.json"));
 
@@ -83,6 +92,7 @@ int main(int argc, char *argv[])
     QTCANVAS_EXPORT_TYPES;
 
     QApplication app(argc, argv);
+    Q_INIT_RESOURCE(tests);
     app.setAttribute(Qt::AA_Use96Dpi, true);
 
     Canvas::init(argc, argv);

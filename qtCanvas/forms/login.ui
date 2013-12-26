@@ -70,7 +70,13 @@
    <item>
     <widget class="QPushButton" name="btnLogin">
      <property name="text">
-      <string>Login</string>
+      <string>&amp;Login</string>
+     </property>
+     <property name="autoDefault">
+      <bool>false</bool>
+     </property>
+     <property name="default">
+      <bool>true</bool>
      </property>
      <property name="flat">
       <bool>false</bool>

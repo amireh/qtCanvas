@@ -42,3 +42,8 @@ void Login::on_btnLogin_clicked()
         }
     });
 }
+
+void Login::on_txtToken_returnPressed()
+{
+//    ui->btnLogin->click();
+}

@@ -21,6 +21,7 @@
 #include <functional>
 
 #include "question_renderer.hpp"
+#include "widgets/question_index.hpp"
 
 namespace Ui {
 class TakeQuiz;
@@ -57,9 +58,11 @@ private:
     Renderers mRenderers;
 
     void renderQuestions();
-    QLayout* renderQuestionFrame(QuizQuestion*, QWidget*);
+    QWidget *renderQuestion(QuizQuestion *question);
+    QFrame *renderQuestionFrame(QuizQuestion*, QWidget*);
     QWidget * renderAnswerFrame(QWidget *qqWidget);
-
+    QWidget *renderMarkButton(const QuizQuestion *qq, QWidget *widget);
+    QuestionIndex *mQuestionIndex;
 };
 
 #endif // TAKE_QUIZ_HPP

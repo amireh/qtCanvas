@@ -1,7 +1,6 @@
 #include <QString>
 #include <QtTest>
 #include <canvas/canvas.hpp>
-#include <canvas/file_manager.hpp>
 
 class Tests : public QObject
 {
@@ -18,5 +17,5 @@ private Q_SLOTS:
     void populatesMultipleChoiceQuestionAnswers();
 
 private:
-    Canvas::String loadFixture(Canvas::String const& path);
+    Canvas::String loadFixture(QString const& path);
 };

@@ -34,8 +34,9 @@ SOURCES = $$unique(SOURCES)
 
 RESOURCES = $${ROOT_DIRECTORY}/qtCanvas/resources/qtCanvas.qrc
 
-FORMS = $$find(FILES, "forms/.*\.ui")
+FORMS = $$find(FILES, "(forms|widgets)/.*\.ui")
 FORMS = $$replace(FORMS, "forms","$${ROOT_DIRECTORY}/qtCanvas/forms")
+FORMS = $$replace(FORMS, "widgets","$${ROOT_DIRECTORY}/qtCanvas/widgets")
 FORMS = $$unique(FORMS)
 
 win32:CONFIG(release, debug|release): LIBS += -lcanvas
