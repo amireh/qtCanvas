@@ -51,3 +51,5 @@ resources/qtCanvas.css
 include/widgets/question_index.hpp
 src/widgets/question_index.cpp
 widgets/question_index.ui
+include/widgets/question_widget.hpp
+src/widgets/question_widget.cpp

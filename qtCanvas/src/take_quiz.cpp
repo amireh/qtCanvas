@@ -49,6 +49,7 @@ void TakeQuiz::setup()
 
     ui->quizTitleLabel->setText(QString::fromStdString(mQuiz->title()));
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
+
     debug() << "Rendering " << mQuiz->questions().size() << " questions";
 
     mQuiz->loadQuestions(session, [&](bool success) {
@@ -56,13 +57,15 @@ void TakeQuiz::setup()
             mQuizSubmission->loadAnswers(session, [&](bool success) {
                 if (success) {
                     renderQuestions();
+                    ui->scrollArea->adjustSize();
                     setStatus("Ready.");
                 }
                 else {
                     setStatus("Error: unable to load answers.");
                 }
             });
-            mQuestionIndex->render(mQuiz->questions());
+
+            mQuestionIndex->render(mQuiz->questions(), ui->scrollArea);
         }
         else {
             setStatus("Error: unable to quiz questions.");
@@ -142,7 +145,7 @@ void TakeQuiz::renderQuestions()
 }
 
 QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
-    QWidget *qqWidget;
+    QuestionWidget *qqWidget;
     QFrame *qqTitleFrame;
     QLayout *qqLayout;
     QWidget *answerWidget;
@@ -155,7 +158,7 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
         return nullptr;
     }
 
-    qqWidget = new QWidget(this);
+    qqWidget = new QuestionWidget(this, question);
     qqLayout = new QGridLayout(qqWidget);
 
     qqTitleFrame = renderQuestionFrame(question, qqWidget);
@@ -176,7 +179,7 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
 
     qqWidget->setObjectName("qq");
     qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
-    question->setUserData<QWidget>("QWidget", qqWidget);
+    question->setUserData<QuestionWidget>("QWidget", qqWidget);
 
     return qqWidget;
 }

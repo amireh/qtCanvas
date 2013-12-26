@@ -28,6 +28,7 @@ public:
     virtual QWidget *renderText(QWidget *widget, QString text="");
 signals:
     void answerModified(QuizQuestion const*);
+    void focused(QWidget*);
 protected:
     virtual QLayout *renderLayout(QWidget *answerWidget);
     QuizQuestion* mQuestion;

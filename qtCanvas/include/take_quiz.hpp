@@ -9,6 +9,8 @@
 #include <QMessageBox>
 #include <QToolButton>
 #include <QCheckBox>
+#include <QScrollArea>
+#include <QScrollBar>
 
 #include "include/qview.hpp"
 #include "include/state.h"
@@ -22,6 +24,7 @@
 
 #include "question_renderer.hpp"
 #include "widgets/question_index.hpp"
+#include "widgets/question_widget.hpp"
 
 namespace Ui {
 class TakeQuiz;
