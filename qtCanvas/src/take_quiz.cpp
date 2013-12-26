@@ -46,9 +46,12 @@ void TakeQuiz::setup()
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
     mQuestionIndex = new QuestionIndex(ui->indexFrame);
+    mClock = new QClock(this);
 
     ui->quizTitleLabel->setText(QString::fromStdString(mQuiz->title()));
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
+    ui->titleLayout->addWidget(mClock);
+    mClock->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
     debug() << "Rendering " << mQuiz->questions().size() << " questions";
 
@@ -174,12 +177,12 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
 
     renderer->render(answerWidget);
 
-    QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
-                     this, SLOT(saveAnswer(const QuizQuestion*)));
-
-    qqWidget->setObjectName("qq");
+    qqWidget->setObjectName("qqWidget");
     qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
     question->setUserData<QuestionWidget>("QWidget", qqWidget);
+
+    QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
+                     this, SLOT(saveAnswer(const QuizQuestion*)));
 
     return qqWidget;
 }
@@ -208,7 +211,6 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     titleLayout->addWidget(pointsLabel, 0, Qt::AlignRight);
 
     titleWidget->setObjectName("qqTitle");
-
 
     return titleWidget;
 }

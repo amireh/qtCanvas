@@ -25,6 +25,7 @@
 #include "question_renderer.hpp"
 #include "widgets/question_index.hpp"
 #include "widgets/question_widget.hpp"
+#include "widgets/qclock.hpp"
 
 namespace Ui {
 class TakeQuiz;
@@ -66,6 +67,7 @@ private:
     QWidget * renderAnswerFrame(QWidget *qqWidget);
     QWidget *renderMarkButton(const QuizQuestion *qq, QWidget *widget);
     QuestionIndex *mQuestionIndex;
+    QClock *mClock;
 };
 
 #endif // TAKE_QUIZ_HPP

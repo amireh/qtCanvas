@@ -1,7 +1,7 @@
 #include "include/widgets/question_widget.hpp"
 
 QuestionWidget::QuestionWidget(QWidget *parent, Canvas::QuizQuestion *question)
-    : QWidget(parent), mQuestion(question)
+    : QFrame(parent), mQuestion(question)
 {
 
 }
@@ -13,6 +13,5 @@ Canvas::QuizQuestion *QuestionWidget::question() const
 
 void QuestionWidget::enterEvent(QEvent *)
 {
-    qDebug("mouse entered for question widget");
     emit focused(this);
 }

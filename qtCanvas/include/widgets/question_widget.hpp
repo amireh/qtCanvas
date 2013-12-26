@@ -1,12 +1,12 @@
 #ifndef QUESTION_WIDGET_HPP
 #define QUESTION_WIDGET_HPP
 
-#include <QWidget>
+#include <QFrame>
 #include <canvas/resources/quiz_question.hpp>
 
 using Canvas::QuizQuestion;
 
-class QuestionWidget : public QWidget
+class QuestionWidget : public QFrame
 {
     Q_OBJECT
 public:

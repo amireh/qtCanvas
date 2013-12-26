@@ -53,3 +53,6 @@ src/widgets/question_index.cpp
 widgets/question_index.ui
 include/widgets/question_widget.hpp
 src/widgets/question_widget.cpp
+include/widgets/qclock.hpp
+src/widgets/qclock.cpp
+widgets/qclock.ui

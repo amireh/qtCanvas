@@ -1,9 +1,9 @@
-QWidget#qq {
-  background-color: rgba(255, 255, 255,0.25);
+#qqWidget {
+  background-color: rgba(255, 255, 255, 0.25);
   border: 1px solid rgba(0,0,0,0.1);
 }
 
-QFrame#qqTitle {
+#qqTitle {
   border: 1px solid rgba(0,0,0,0.1);
   border-top: none;
   border-left: none;
