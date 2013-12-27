@@ -1,6 +1,7 @@
 #include "widgets/question_index.hpp"
 #include "ui_question_index.h"
 #include "type_exports.hpp"
+#include "state.h"
 
 QuestionIndex::QuestionIndex(QWidget *parent) :
     QWidget(parent),
@@ -18,6 +19,8 @@ QuestionIndex::~QuestionIndex()
 
 void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrollArea)
 {
+    connect(&State::singleton(), SIGNAL(questionModified(const QuizQuestion*)),
+            this, SLOT(updateQuestionStatus(const QuizQuestion*)));
     mScrollArea = scrollArea;
 
     for (auto qq : questions) {
@@ -25,6 +28,7 @@ void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrol
 
         if (qqItem) {
             ui->listWidget->addItem(qqItem);
+            qq->setUserData<QListWidgetItem>("IndexItem", qqItem);
         }
 
         QuestionWidget *qqWidget = qq->userData<QuestionWidget>("QWidget");
@@ -41,14 +45,28 @@ QListWidgetItem *QuestionIndex::renderQuestionEntry(const Canvas::QuizQuestion *
                                  view);
     qqItem->setData(0x0100, QVariant::fromValue(PQuizQuestion(qq)));
 
-    if (qq->isMarked()) {
-        qqItem->setIcon(QIcon::fromTheme("emblem-important"));
-    }
-    else {
-        qqItem->setIcon(QIcon::fromTheme("emblem-default"));
-    }
+    updateQuestionStatus(qq, qqItem);
 
     return qqItem;
+}
+
+void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq, QListWidgetItem *qqItem)
+{
+    if (qq->isMarked()) {
+        qqItem->setIcon(QIcon::fromTheme("emblem-important",
+                                         QIcon(":icons/emblem-important.png")));
+    }
+    else {
+        if (qq->isAnswered()) {
+            qqItem->setIcon(QIcon::fromTheme("emblem-default",
+                                             QIcon(":icons/emblem-success.png")));
+        }
+        else {
+            qqItem->setIcon(QIcon::fromTheme("emblem-unreadable",
+                                             QIcon(":icons/emblem-unreadable.png")));
+        }
+    }
+
 }
 
 void QuestionIndex::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
@@ -75,12 +93,23 @@ void QuestionIndex::updateSelection(QuestionWidget *qqWidget)
 {
     QuizQuestion *qq = qqWidget->question();
 
-    QList<QListWidgetItem*> items = ui->listWidget->findItems(QString("Question %1").arg(qq->position()), Qt::MatchExactly);
+    QList<QListWidgetItem*> items =
+            ui->listWidget->findItems(QString("Question %1").arg(qq->position()),
+                                      Qt::MatchExactly);
 
     if (!items.empty()) {
         mInternalSelectionUpdate = true;
         QListWidgetItem *qqItem = items.first();
         ui->listWidget->setCurrentItem(qqItem);
+    }
+}
+
+void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq)
+{
+    QListWidgetItem *qqItem = qq->userData<QListWidgetItem>("IndexItem");
+
+    if (qqItem) {
+        updateQuestionStatus(qq, qqItem);
     }
 }
 

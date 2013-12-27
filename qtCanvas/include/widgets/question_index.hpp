@@ -28,6 +28,7 @@ public:
 private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void updateSelection(QuestionWidget*);
+    void updateQuestionStatus(const QuizQuestion*);
 
 private:
     Ui::QuestionIndex *ui;
@@ -35,6 +36,8 @@ private:
     QListWidgetItem* renderQuestionEntry(QuizQuestion const *qq, QListWidget *view);
     QScrollArea *mScrollArea;
     bool mInternalSelectionUpdate;
+
+    void updateQuestionStatus(const Canvas::QuizQuestion *, QListWidgetItem*);
 };
 
 #endif // QUESTION_INDEX_HPP

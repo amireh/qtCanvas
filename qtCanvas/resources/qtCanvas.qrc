@@ -1,6 +1,13 @@
-<!DOCTYPE RCC>
-<RCC version="1.0">
-  <qresource>
-      <file>qtCanvas.css</file>
-  </qresource>
+<RCC>
+    <qresource prefix="/">
+        <file>qtCanvas.css</file>
+        <file>icons/emblem-important.svg</file>
+        <file>icons/emblem-ubuntuone-synchronized.svg</file>
+        <file>icons/emblem-unreadable.svg</file>
+        <file>icons/emblem-default.png</file>
+        <file>icons/emblem-important.png</file>
+        <file>icons/emblem-unreadable.png</file>
+        <file>icons/emblem-success.png</file>
+        <file>icons/appointment-soon.svg</file>
+    </qresource>
 </RCC>

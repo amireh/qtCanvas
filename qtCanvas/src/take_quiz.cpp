@@ -174,6 +174,7 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     }
 
     qqLayout->addWidget(answerWidget);
+    qqLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
     renderer->render(answerWidget);
 
@@ -260,6 +261,7 @@ void TakeQuiz::submitQuiz()
 
 void TakeQuiz::markQuestion(bool isMarked)
 {
+    Canvas::Session &session = State::singleton().getSession();
     QObject *qqWidget = QObject::sender()->parent()->parent();
     QuizQuestion *qq = *qqWidget->property("qq").value<PQuizQuestion>();
 
@@ -277,9 +279,10 @@ void TakeQuiz::markQuestion(bool isMarked)
 
     qq->mark(isMarked);
 
-    mQuizSubmission->save(qq, State::singleton().getSession(), [&](bool success) {
+    mQuizSubmission->save(qq, session, [&](bool success) {
         if (success) {
             setStatus(QString("Question %1").arg(qq->isMarked() ? "marked" : "unmarked."));
+            State::singleton().emit questionModified(qq);
         }
         else {
             setStatus("Error: unable to change question status.");
@@ -296,6 +299,7 @@ void TakeQuiz::saveAnswer(QuizQuestion const* qq)
     mQuizSubmission->save(qq, session, [&](bool success) {
         if (success) {
             setStatus("Answer saved.");
+            State::singleton().emit questionModified(qq);
         }
         else {
             setStatus("Error: answer could not saved.");

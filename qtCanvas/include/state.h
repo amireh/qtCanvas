@@ -11,7 +11,10 @@
 #include <canvas/resources/course.hpp>
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_submission.hpp>
+#include <canvas/resources/quiz_question.hpp>
 #include <vector>
+
+using Canvas::QuizQuestion;
 
 class State : public QObject, public Canvas::Logger
 {
@@ -36,6 +39,7 @@ public:
     Canvas::QuizSubmission* activeQuizSubmission();
 signals:
     void loggedOut();
+    void questionModified(QuizQuestion const*);
 
 private:
     State();

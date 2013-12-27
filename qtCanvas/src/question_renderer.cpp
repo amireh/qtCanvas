@@ -30,6 +30,7 @@ QLayout *QuestionRenderer::renderLayout(QWidget *answerWidget)
 
     layout = new QGridLayout(answerWidget);
     layout->setContentsMargins(0,0,0,0);
+    layout->setSizeConstraint(QLayout::SetMinimumSize);
 
     return layout;
 }

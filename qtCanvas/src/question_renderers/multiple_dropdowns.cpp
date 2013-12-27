@@ -50,9 +50,10 @@ namespace QuestionRenderers {
                 }
 
                 blankAnswers->setProperty("blankId", fragment.blankId);
+                blankAnswers->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
                 layout->addWidget(blankAnswers);
 
-                QObject::connect(blankAnswers, SIGNAL(currentIndexChanged(int)),
+                connect(blankAnswers, SIGNAL(currentIndexChanged(int)),
                                  this, SLOT(chooseAnswer(int)));
             }
 
