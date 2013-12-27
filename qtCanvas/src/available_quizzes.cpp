@@ -127,6 +127,10 @@ void AvailableQuizzes::addQuiz(Canvas::Quiz const &quiz)
     quizItem->setText(1, tr("-"));
     quizItem->setData(100, 0x0100, QVariant::fromValue(PQuiz(&quiz)));
 
+    if (!courseItem->isExpanded()) {
+        courseItem->setExpanded(true);
+    }
+
     debug() << "new tree item for quiz#" << quiz.id() << " "
             << "to course#" << quiz.course()->id()
             << ", titled: " << quiz.title();
@@ -158,6 +162,30 @@ QTreeWidgetItem *AvailableQuizzes::quizTreeItem(const Quiz &quiz)
     }
 
     return nullptr;
+}
+
+QString AvailableQuizzes::humanReadableTime(qint64 seconds) const
+{
+    if (seconds < 60) {
+        return "Less than a minute.";
+    }
+    else if (seconds < 3600) {
+        return QString("%1 minutes").arg(seconds / 60);
+    }
+    else if (seconds < 86400) {
+        return QString("%1 hours").arg(seconds / 3600);
+    }
+    else {
+        return QString("Over a day.");
+    }
+}
+
+qint64 AvailableQuizzes::timestampToSeconds(const Canvas::String &date) const
+{
+    QDateTime from =
+            QDateTime::fromString(QString::fromStdString(date),
+                                  "yyyy-MM-dd'T'HH:mm:ss'Z'");
+    return from.secsTo(QDateTime::currentDateTime());
 }
 
 void AvailableQuizzes::updateQuizActions(QTreeWidgetItem *current, QTreeWidgetItem */*previous*/)
@@ -255,7 +283,9 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
     }
 
     if (qs.isTakeable()) {
-        status = "In Progress";
+        status = QString("In Progress (for %1)")
+                .arg(humanReadableTime(timestampToSeconds(qs.startedAt())));
+
     }
     else if (qs.isComplete()) {
         status = "Complete";

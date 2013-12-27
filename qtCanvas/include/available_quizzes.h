@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QTreeWidget>
+#include <QDateTime>
 #include <canvas/resources/course.hpp>
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_submission.hpp>
@@ -91,6 +92,9 @@ private:
     Ui::AvailableQuizzes *ui;
     QTreeWidgetItem* courseTreeItem(Canvas::Course const&);
     QTreeWidgetItem* quizTreeItem(Canvas::Quiz const&);
+
+    qint64 timestampToSeconds(Canvas::String const&) const;
+    QString humanReadableTime(qint64 seconds) const;
 };
 
 #endif // AVAILABLE_QUIZZES_H

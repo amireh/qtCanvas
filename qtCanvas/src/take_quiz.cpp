@@ -268,13 +268,30 @@ void TakeQuiz::markQuestion(bool isMarked)
         return;
     }
 
+    if (qq->isMarked()) {
+        setStatus("Unmarking question...");
+    }
+    else {
+        setStatus("Marking question...");
+    }
+
     qq->mark(isMarked);
-    mQuizSubmission->save(qq, State::singleton().getSession());
+
+    mQuizSubmission->save(qq, State::singleton().getSession(), [&](bool success) {
+        if (success) {
+            setStatus(QString("Question %1").arg(qq->isMarked() ? "marked" : "unmarked."));
+        }
+        else {
+            setStatus("Error: unable to change question status.");
+        }
+    });
 }
 
 void TakeQuiz::saveAnswer(QuizQuestion const* qq)
 {
     Canvas::Session &session = State::singleton().getSession();
+
+    setStatus("Saving your answer...");
 
     mQuizSubmission->save(qq, session, [&](bool success) {
         if (success) {
