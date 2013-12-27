@@ -10,15 +10,17 @@ MainWindow::MainWindow(QWidget *parent, QApplication &app) :
     Viewport &viewport = Viewport::singleton();
     ui->setupUi(this);
 
-    QObject::connect(ui->actionLogout, SIGNAL(triggered()),
-                     this, SLOT(logout()));
+    bindMenuActions();
 
     viewport.setLayout(ui->centralWidget->layout());
     viewport.setStatusBar(ui->statusBar);
+    viewport.setToolBar(ui->toolBar);
 
     viewport.registerView("Login", []() -> QView* { return new Login; });
     viewport.registerView("AvailableQuizzes", []() -> QView* { return new AvailableQuizzes; });
     viewport.registerView("TakeQuiz", []() -> QView* { return new TakeQuiz; });
+    viewport.registerDialog("Settings", []() -> QDialog* { return new SettingsDialog; });
+    viewport.registerDialog("About", []() -> QDialog* { return new AboutDialog; });
 
     QFile css(":/qtCanvas.css");
 
@@ -40,4 +42,23 @@ void MainWindow::logout()
     Viewport::singleton().transition("Login");
     State::singleton().emit loggedOut();
     State::singleton().reset();
+}
+
+void MainWindow::showSettingsDialog()
+{
+    Viewport::singleton().showDialog("Settings");
+}
+
+void MainWindow::showAboutDialog()
+{
+    Viewport::singleton().showDialog("About");
+}
+
+void MainWindow::bindMenuActions()
+{
+    connect(ui->actionLogout, SIGNAL(triggered()), this, SLOT(logout()));
+    connect(ui->actionOptions, SIGNAL(triggered()),
+            this, SLOT(showSettingsDialog()));
+    connect(ui->actionA_bout_qtCanvas, SIGNAL(triggered()),
+            this, SLOT(showAboutDialog()));
 }

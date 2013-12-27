@@ -19,6 +19,8 @@ macx {
     QMAKE_CXXFLAGS += -stdlib=libc++
     LIBPATH += /usr/local/lib
     INCLUDEPATH += /usr/local/include # for libcanvas / libjsoncpp
+
+    ICON = qtCanvas/resources/icons/canvas.icns
 }
 
 INCLUDEPATH += $${ROOT_DIRECTORY}/qtCanvas/include
@@ -34,10 +36,13 @@ SOURCES = $$unique(SOURCES)
 
 RESOURCES = $${ROOT_DIRECTORY}/qtCanvas/resources/qtCanvas.qrc
 
-FORMS = $$find(FILES, "(forms|widgets)/.*\.ui")
+FORMS = $$find(FILES, "(forms|widgets|dialogs)/.*\.ui")
 FORMS = $$replace(FORMS, "forms","$${ROOT_DIRECTORY}/qtCanvas/forms")
 FORMS = $$replace(FORMS, "widgets","$${ROOT_DIRECTORY}/qtCanvas/widgets")
+FORMS = $$replace(FORMS, "dialogs","$${ROOT_DIRECTORY}/qtCanvas/dialogs")
 FORMS = $$unique(FORMS)
+
+RC_FILE = qtcanvas.rc
 
 win32:CONFIG(release, debug|release): LIBS += -lcanvas
 else:win32:CONFIG(debug, debug|release): LIBS += -lcanvas

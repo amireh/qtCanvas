@@ -56,3 +56,9 @@ src/widgets/question_widget.cpp
 include/widgets/qclock.hpp
 src/widgets/qclock.cpp
 widgets/qclock.ui
+include/dialogs/settings_dialog.hpp
+src/dialogs/settings_dialog.cpp
+dialogs/settings_dialog.ui
+include/dialogs/about_dialog.hpp
+src/dialogs/about_dialog.cpp
+dialogs/about_dialog.ui

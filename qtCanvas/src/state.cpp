@@ -1,14 +1,23 @@
 #include "include/state.h"
 #include <algorithm>
+#include <QSettings>
 
 using Canvas::Course;
 
 State* State::ginstance = nullptr;
 
 State::State() : Logger("qtCanvas"), mStudent(nullptr) {
-//    Canvas::Settings::set("canvas_host", "http://kodoware.com");
-    Canvas::Settings::set("canvas_host", "http://localhost");
-    Canvas::Settings::set("canvas_port", "3000");
+    QSettings settings;
+
+    Canvas::Settings::set("canvas_host",
+                          settings.value("canvas/host", "http://localhost")
+                            .toString()
+                            .toStdString());
+
+    Canvas::Settings::set("canvas_port",
+                          settings.value("canvas/port", "3000")
+                            .toString()
+                            .toStdString());
 
     reset();
 }

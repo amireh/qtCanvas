@@ -4,8 +4,10 @@
 #include <QWidget>
 #include <QListWidget>
 #include <QScrollArea>
+#include <QToolButton>
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_question.hpp>
+#include <canvas/logger.hpp>
 #include "widgets/question_widget.hpp"
 
 namespace Ui {
@@ -15,7 +17,7 @@ class QuestionIndex;
 using Canvas::Quiz;
 using Canvas::QuizQuestion;
 
-class QuestionIndex : public QWidget
+class QuestionIndex : public QWidget, public Canvas::Logger
 {
     Q_OBJECT
 
@@ -29,7 +31,7 @@ private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void updateSelection(QuestionWidget*);
     void updateQuestionStatus(const QuizQuestion*);
-
+    void markQuestion(bool);
 private:
     Ui::QuestionIndex *ui;
 
@@ -37,6 +39,7 @@ private:
     QScrollArea *mScrollArea;
     bool mInternalSelectionUpdate;
 
+    void createToolbarButtons();
     void updateQuestionStatus(const Canvas::QuizQuestion *, QListWidgetItem*);
 };
 

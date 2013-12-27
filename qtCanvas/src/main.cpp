@@ -16,8 +16,9 @@ int main(int argc, char *argv[])
 
     QApplication app(argc, argv);
 
-    app.setOrganizationName("Instructure");
-    app.setApplicationName("qtCanvas");
+    QCoreApplication::setOrganizationName("Algol Labs");
+    QCoreApplication::setOrganizationDomain("algollabs.com");
+    QCoreApplication::setApplicationName("qtCanvas");
 
     MainWindow w(nullptr, app);
     w.show();

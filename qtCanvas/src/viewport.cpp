@@ -38,15 +38,16 @@ void Viewport::setLayout(QLayout* inLayout) {
     errorMessageDialog = new QErrorMessage(mLayout->parentWidget());
 }
 
-void Viewport::transition(const std::string &viewType)
+void Viewport::transition(const QString &viewType)
 {
-    if (!views[viewType]) {
-        throw std::runtime_error("No generator found for view " + viewType);
+    ViewGenerators::iterator locator = mViews.find(viewType);
+    if (locator == mViews.end()) {
+        throw std::runtime_error("No generator found for view " + viewType.toStdString());
     }
 
     assertLayoutSet();
 
-    ViewGenerator& generator = views[viewType];
+    ViewGenerator& generator = locator->second;
     QView *view;
 
     if (mView) {
@@ -59,6 +60,11 @@ void Viewport::transition(const std::string &viewType)
     attach(view);
 
     mView = view;
+}
+
+void Viewport::registerDialog(const QString &dialogId, Viewport::DialogGenerator generator)
+{
+    mDialogs.insert(std::make_pair(dialogId, generator));
 }
 
 void Viewport::attach(QView *view) {
@@ -87,17 +93,45 @@ void Viewport::assertLayoutSet()
 
 void Viewport::setStatusBar(QStatusBar *inStatusBar)
 {
-    statusBar = inStatusBar;
+    mStatusBar = inStatusBar;
+}
+
+void Viewport::setToolBar(QToolBar *toolBar)
+{
+    mToolBar = toolBar;
 }
 
 void Viewport::setStatus(const QString &message)
 {
-    statusBar->showMessage(message);
+    mStatusBar->showMessage(message);
 }
 
-void Viewport::registerView(const std::string &viewId, ViewGenerator generator)
+QToolBar *Viewport::getToolBar() const
 {
-    views[viewId] = generator;
+    return mToolBar;
+}
+
+void Viewport::registerView(const QString &viewId, ViewGenerator generator)
+{
+    mViews.insert(std::make_pair(viewId, generator));
+}
+
+int Viewport::showDialog(const QString &dialogId)
+{
+    DialogGenerators::const_iterator itr = mDialogs.find(dialogId);
+
+    if (itr == mDialogs.end()) {
+        throw std::invalid_argument("Can not create dialogs of type " + dialogId.toStdString());
+    }
+
+    if (mDialog) {
+        mDialog->close();
+        mDialog->layout()->removeWidget(mDialog);
+        mDialog = nullptr;
+    }
+
+    mDialog = itr->second();
+    return mDialog->exec();
 }
 
 QErrorMessage *Viewport::errorDialog()

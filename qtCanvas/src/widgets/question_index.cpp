@@ -2,9 +2,11 @@
 #include "ui_question_index.h"
 #include "type_exports.hpp"
 #include "state.h"
+#include "viewport.h"
 
 QuestionIndex::QuestionIndex(QWidget *parent) :
     QWidget(parent),
+    Canvas::Logger("QuestionIndex"),
     ui(new Ui::QuestionIndex),
     mScrollArea(nullptr),
     mInternalSelectionUpdate(false)
@@ -19,9 +21,10 @@ QuestionIndex::~QuestionIndex()
 
 void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrollArea)
 {
+    mScrollArea = scrollArea;
+    createToolbarButtons();
     connect(&State::singleton(), SIGNAL(questionModified(const QuizQuestion*)),
             this, SLOT(updateQuestionStatus(const QuizQuestion*)));
-    mScrollArea = scrollArea;
 
     for (auto qq : questions) {
         QListWidgetItem *qqItem = renderQuestionEntry(qq, ui->listWidget);
@@ -48,6 +51,18 @@ QListWidgetItem *QuestionIndex::renderQuestionEntry(const Canvas::QuizQuestion *
     updateQuestionStatus(qq, qqItem);
 
     return qqItem;
+}
+
+void QuestionIndex::createToolbarButtons()
+{
+//    QToolButton *flagQuestionButton = new QToolButton(Viewport::singleton().getToolBar());
+    QAction *action =
+            Viewport::singleton().getToolBar()->addAction(
+                QIcon(":icons/bookmark-new.svg"),
+               "Mark, or unmark, this question.");
+
+    connect(action, SIGNAL(triggered(bool)),
+            this, SLOT(markQuestion(bool)));
 }
 
 void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq, QListWidgetItem *qqItem)
@@ -111,5 +126,10 @@ void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq)
     if (qqItem) {
         updateQuestionStatus(qq, qqItem);
     }
+}
+
+void QuestionIndex::markQuestion(bool)
+{
+    debug() << "marking question";
 }
 
