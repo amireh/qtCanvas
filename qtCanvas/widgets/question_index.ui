@@ -66,6 +66,13 @@
      </property>
     </widget>
    </item>
+   <item>
+    <widget class="QPushButton" name="markButton">
+     <property name="text">
+      <string>Mark Question</string>
+     </property>
+    </widget>
+   </item>
   </layout>
  </widget>
  <resources/>

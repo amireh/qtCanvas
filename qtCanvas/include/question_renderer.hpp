@@ -22,6 +22,7 @@ public:
 
     /**
      * Render a Label that displays the question's text.
+     *
      * @param[in] widget The question's widget.
      * @return The text widget you should add to a layout.
      */

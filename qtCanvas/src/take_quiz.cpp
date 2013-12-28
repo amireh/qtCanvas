@@ -46,21 +46,17 @@ void TakeQuiz::setup()
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
     mQuestionIndex = new QuestionIndex(ui->indexFrame);
-    mClock = new QClock(this);
 
     ui->quizTitleLabel->setText(QString::fromStdString(mQuiz->title()));
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
-    ui->titleLayout->addWidget(mClock);
-    mClock->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 
-    debug() << "Rendering " << mQuiz->questions().size() << " questions";
+    renderElapsedTimer();
 
     mQuiz->loadQuestions(session, [&](bool success) {
         if (success) {
             mQuizSubmission->loadAnswers(session, [&](bool success) {
                 if (success) {
                     renderQuestions();
-                    ui->scrollArea->adjustSize();
                     setStatus("Ready.");
                 }
                 else {
@@ -147,6 +143,13 @@ void TakeQuiz::renderQuestions()
     }
 }
 
+void TakeQuiz::renderElapsedTimer()
+{
+    QClock *clockWidget = new QClock(this);
+    ui->titleLayout->insertWidget(2, clockWidget);
+//    clockWidget->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+}
+
 QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     QuestionWidget *qqWidget;
     QFrame *qqTitleFrame;
@@ -162,6 +165,10 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     }
 
     qqWidget = new QuestionWidget(this, question);
+    qqWidget->setObjectName("qqWidget");
+    qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
+    question->setUserData<QuestionWidget>("QWidget", qqWidget);
+
     qqLayout = new QGridLayout(qqWidget);
 
     qqTitleFrame = renderQuestionFrame(question, qqWidget);
@@ -177,10 +184,6 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     qqLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
     renderer->render(answerWidget);
-
-    qqWidget->setObjectName("qqWidget");
-    qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
-    question->setUserData<QuestionWidget>("QWidget", qqWidget);
 
     QObject::connect(renderer, SIGNAL(answerModified(const QuizQuestion*)),
                      this, SLOT(saveAnswer(const QuizQuestion*)));
@@ -216,20 +219,6 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     return titleWidget;
 }
 
-QWidget *TakeQuiz::renderMarkButton(QuizQuestion const* qq, QWidget *widget)
-{
-    QToolButton *markButton = new QToolButton(widget);
-
-    markButton->setIcon(QIcon::fromTheme("emblem-important"));
-    markButton->setCheckable(true);
-    markButton->setChecked(qq->isMarked());
-
-    QObject::connect(markButton, SIGNAL(toggled(bool)),
-                     this, SLOT(markQuestion(bool)));
-
-    return markButton;
-}
-
 void TakeQuiz::submitQuiz()
 {
     QMessageBox confirmation;
@@ -255,37 +244,6 @@ void TakeQuiz::submitQuiz()
         }
         else {
             setStatus("Error: unable to submit quiz, please try again.");
-        }
-    });
-}
-
-void TakeQuiz::markQuestion(bool isMarked)
-{
-    Canvas::Session &session = State::singleton().getSession();
-    QObject *qqWidget = QObject::sender()->parent()->parent();
-    QuizQuestion *qq = *qqWidget->property("qq").value<PQuizQuestion>();
-
-    if (!qq) {
-        error() << "unable to find quiz question";
-        return;
-    }
-
-    if (qq->isMarked()) {
-        setStatus("Unmarking question...");
-    }
-    else {
-        setStatus("Marking question...");
-    }
-
-    qq->mark(isMarked);
-
-    mQuizSubmission->save(qq, session, [&](bool success) {
-        if (success) {
-            setStatus(QString("Question %1").arg(qq->isMarked() ? "marked" : "unmarked."));
-            State::singleton().emit questionModified(qq);
-        }
-        else {
-            setStatus("Error: unable to change question status.");
         }
     });
 }

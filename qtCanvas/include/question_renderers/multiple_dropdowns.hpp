@@ -13,6 +13,7 @@
 #include <QComboBox>
 #include <QFormLayout>
 #include <QHBoxLayout>
+#include <QEvent>
 
 using namespace Canvas;
 

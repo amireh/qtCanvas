@@ -1,4 +1,5 @@
 #include "include/question_renderers/matching.hpp"
+
 namespace QuestionRenderers {
 
     Matching::Matching(QuizQuestion *qq)
@@ -21,6 +22,8 @@ namespace QuestionRenderers {
             QComboBox *matchCombo = createMatchCombo();
 
             matchCombo->setProperty("answerId", answer->id());
+            matchCombo->setFocusPolicy(Qt::StrongFocus);
+            matchCombo->installEventFilter( mQuestion->userData<QWidget>("QWidget") );
 
             QObject::connect(matchCombo, SIGNAL(currentIndexChanged(int)),
                              this, SLOT(chooseMatch(int)));

@@ -2,6 +2,7 @@
 #define QUESTION_WIDGET_HPP
 
 #include <QFrame>
+#include <QEvent>
 #include <canvas/resources/quiz_question.hpp>
 
 using Canvas::QuizQuestion;
@@ -19,6 +20,7 @@ signals:
 protected:
     QuizQuestion *mQuestion;
     virtual void enterEvent(QEvent*);
+    virtual bool eventFilter(QObject *o, QEvent *e);
 
 
 };

@@ -50,7 +50,6 @@ public:
 
 private slots:
     void submitQuiz();
-    void markQuestion(bool);
     void saveAnswer(const QuizQuestion *qq);
 private:
     typedef std::vector<QuestionRenderer*> Renderers;
@@ -62,12 +61,11 @@ private:
     Renderers mRenderers;
 
     void renderQuestions();
+    void renderElapsedTimer();
     QWidget *renderQuestion(QuizQuestion *question);
     QFrame *renderQuestionFrame(QuizQuestion*, QWidget*);
     QWidget * renderAnswerFrame(QWidget *qqWidget);
-    QWidget *renderMarkButton(const QuizQuestion *qq, QWidget *widget);
     QuestionIndex *mQuestionIndex;
-    QClock *mClock;
 };
 
 #endif // TAKE_QUIZ_HPP

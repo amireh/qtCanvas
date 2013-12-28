@@ -22,9 +22,12 @@ QuestionIndex::~QuestionIndex()
 void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrollArea)
 {
     mScrollArea = scrollArea;
-    createToolbarButtons();
+
     connect(&State::singleton(), SIGNAL(questionModified(const QuizQuestion*)),
             this, SLOT(updateQuestionStatus(const QuizQuestion*)));
+
+    connect(ui->markButton, SIGNAL(released()),
+            this, SLOT(markQuestion()));
 
     for (auto qq : questions) {
         QListWidgetItem *qqItem = renderQuestionEntry(qq, ui->listWidget);
@@ -35,8 +38,9 @@ void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrol
         }
 
         QuestionWidget *qqWidget = qq->userData<QuestionWidget>("QWidget");
-        QObject::connect(qqWidget, SIGNAL(focused(QuestionWidget*)),
-                         this, SLOT(updateSelection(QuestionWidget*)));
+
+        connect(qqWidget, SIGNAL(focused(QuestionWidget*)),
+                this, SLOT(selectFocusedQuestion(QuestionWidget*)));
     }
 }
 
@@ -51,18 +55,6 @@ QListWidgetItem *QuestionIndex::renderQuestionEntry(const Canvas::QuizQuestion *
     updateQuestionStatus(qq, qqItem);
 
     return qqItem;
-}
-
-void QuestionIndex::createToolbarButtons()
-{
-//    QToolButton *flagQuestionButton = new QToolButton(Viewport::singleton().getToolBar());
-    QAction *action =
-            Viewport::singleton().getToolBar()->addAction(
-                QIcon(":icons/bookmark-new.svg"),
-               "Mark, or unmark, this question.");
-
-    connect(action, SIGNAL(triggered(bool)),
-            this, SLOT(markQuestion(bool)));
 }
 
 void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq, QListWidgetItem *qqItem)
@@ -84,8 +76,29 @@ void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq, QListWi
 
 }
 
-void QuestionIndex::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous)
+void QuestionIndex::updateMarkButton(const Canvas::QuizQuestion *qq)
 {
+    if (qq->isMarked()) {
+        ui->markButton->setText(tr("Unmark Question"));
+    }
+    else {
+        ui->markButton->setText(tr("Mark Question"));
+    }
+}
+
+Canvas::QuizQuestion *QuestionIndex::selectedQuestion()
+{
+    PQuizQuestion qqPtr = ui->listWidget->currentItem()->data(0x0100).value<PQuizQuestion>();
+
+    return *qqPtr;
+}
+
+void QuestionIndex::on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *)
+{
+    QuizQuestion *qq = *current->data(0x0100).value<PQuizQuestion>();
+
+    updateMarkButton(qq);
+
     // this means the item selection was changed by us spying on the QuestionWidget,
     // so don't scroll it into view
     if (mInternalSelectionUpdate) {
@@ -93,18 +106,13 @@ void QuestionIndex::on_listWidget_currentItemChanged(QListWidgetItem *current, Q
         return;
     }
 
-    PQuizQuestion qqPtr = current->data(0x0100).value<PQuizQuestion>();
-    QuizQuestion *qq = *qqPtr;
-
     if (qq) {
-        assert(mScrollArea);
-
         QuestionWidget *qqWidget = qq->userData<QuestionWidget>("QWidget");
         mScrollArea->ensureWidgetVisible(qqWidget);
     }
 }
 
-void QuestionIndex::updateSelection(QuestionWidget *qqWidget)
+void QuestionIndex::selectFocusedQuestion(QuestionWidget *qqWidget)
 {
     QuizQuestion *qq = qqWidget->question();
 
@@ -128,8 +136,36 @@ void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq)
     }
 }
 
-void QuestionIndex::markQuestion(bool)
+void QuestionIndex::markQuestion()
 {
-    debug() << "marking question";
+    Canvas::Session &session = State::singleton().getSession();
+    Canvas::QuizQuestion *qq = selectedQuestion();
+    Canvas::QuizSubmission *qs = State::singleton().activeQuizSubmission();
+
+    if (!qq) {
+        error() << "unable to find quiz question";
+        return;
+    }
+
+    if (qq->isMarked()) {
+        Viewport::singleton().setStatus("Unmarking question...");
+    }
+    else {
+        Viewport::singleton().setStatus("Marking question...");
+    }
+
+    qq->mark(!qq->isMarked());
+
+    qs->save(qq, session, [&](bool success) {
+        if (success) {
+            Viewport::singleton().setStatus(QString("Question %1")
+                                            .arg(qq->isMarked() ? "marked" : "unmarked."));
+            State::singleton().emit questionModified(qq);
+        }
+        else {
+            Viewport::singleton().setStatus(
+                        "Error: unable to change question status.");
+        }
+    });
 }
 

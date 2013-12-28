@@ -7,6 +7,7 @@
 #include <QToolButton>
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_question.hpp>
+#include <canvas/resources/quiz_submission.hpp>
 #include <canvas/logger.hpp>
 #include "widgets/question_widget.hpp"
 
@@ -29,9 +30,9 @@ public:
 
 private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
-    void updateSelection(QuestionWidget*);
+    void selectFocusedQuestion(QuestionWidget*);
     void updateQuestionStatus(const QuizQuestion*);
-    void markQuestion(bool);
+    void markQuestion();
 private:
     Ui::QuestionIndex *ui;
 
@@ -39,8 +40,10 @@ private:
     QScrollArea *mScrollArea;
     bool mInternalSelectionUpdate;
 
-    void createToolbarButtons();
     void updateQuestionStatus(const Canvas::QuizQuestion *, QListWidgetItem*);
+    void updateMarkButton(QuizQuestion const*);
+
+    QuizQuestion *selectedQuestion();
 };
 
 #endif // QUESTION_INDEX_HPP

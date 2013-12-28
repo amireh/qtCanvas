@@ -20,7 +20,7 @@ namespace QuestionRenderers {
         mEditor = new qtCanvas::QTextEdit(widget);
         mEditor->setText(QString::fromStdString(qq->filledAnswer()));
         mEditor->setAcceptRichText(true);
-        mEditor->setAutoFormatting(QTextEdit::AutoAll);
+        mEditor->setTabChangesFocus(true);
         layout->addWidget(mEditor);
 
         QObject::connect(mEditor, SIGNAL(editingFinished()),

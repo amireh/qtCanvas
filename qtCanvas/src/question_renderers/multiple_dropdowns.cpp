@@ -1,5 +1,6 @@
 #include "question_renderers/multiple_dropdowns.hpp"
 #include "type_exports.hpp"
+#include "widgets/question_widget.hpp"
 
 namespace QuestionRenderers {
     const QRegExp MultipleDropdowns::gBlankPattern = QRegExp("(\\[[\\w|_]+\\])");
@@ -33,6 +34,8 @@ namespace QuestionRenderers {
                 QComboBox *blankAnswers = new QComboBox(widget);
                 const String blankId = fragment.blankId.toStdString();
 
+                blankAnswers->setFocusPolicy(Qt::StrongFocus);
+                blankAnswers->installEventFilter( mQuestion->userData<QuestionWidget>("QWidget") );
                 blankAnswers->addItem("-", 0);
 
                 for (auto answer : qq->answers(blankId)) {
@@ -60,7 +63,6 @@ namespace QuestionRenderers {
             debug() << "pretext:" << fragment.pretext.toStdString()
                     << " => " << fragment.blankId.toStdString();
         }
-
     }
 
     bool MultipleDropdowns::hasRenderableText()
@@ -130,5 +132,4 @@ namespace QuestionRenderers {
     {
         return mQuestion->asMultipleDropdowns();
     }
-
 }
