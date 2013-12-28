@@ -45,9 +45,10 @@ void TakeQuiz::setup()
 
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
-    mQuestionIndex = new QuestionIndex(ui->indexFrame);
 
     ui->quizTitleLabel->setText(QString::fromStdString(mQuiz->title()));
+
+    mQuestionIndex = new QuestionIndex(ui->indexFrame);
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
 
     renderElapsedTimer();
@@ -141,6 +142,8 @@ void TakeQuiz::renderQuestions()
             questionLayout->addWidget(qqWidget);
         }
     }
+
+    QTimer::singleShot(0, this, SLOT(forceResize()));
 }
 
 void TakeQuiz::renderElapsedTimer()
@@ -217,6 +220,17 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     titleWidget->setObjectName("qqTitle");
 
     return titleWidget;
+}
+
+void TakeQuiz::forceResize()
+{
+    debug() << "ScrollArea dimensions:" <<
+               ui->scrollArea->width()
+            << "x"
+               << ui->scrollArea->height();
+    resize(sizeHint());
+    ui->scrollArea->resize(433, 379);
+    ui->scrollArea->adjustSize();
 }
 
 void TakeQuiz::submitQuiz()

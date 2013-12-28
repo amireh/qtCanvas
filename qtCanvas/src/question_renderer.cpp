@@ -42,8 +42,9 @@ QWidget* QuestionRenderer::renderText(QWidget *widget, QString text) {
     // Question text:
     // [= %text =]
     QLabel *textLabel = new QLabel(text, widget);
-    textLabel->setContentsMargins(5,5,5,5);
+    textLabel->setContentsMargins(0,5,0,5);
     textLabel->setTextFormat(Qt::RichText);
+    textLabel->setWordWrap(true);
 
     return textLabel;
 }

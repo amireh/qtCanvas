@@ -14,7 +14,6 @@ MainWindow::MainWindow(QWidget *parent, QApplication &app) :
 
     viewport.setLayout(ui->centralWidget->layout());
     viewport.setStatusBar(ui->statusBar);
-    viewport.setToolBar(ui->toolBar);
 
     viewport.registerView("Login", []() -> QView* { return new Login; });
     viewport.registerView("AvailableQuizzes", []() -> QView* { return new AvailableQuizzes; });

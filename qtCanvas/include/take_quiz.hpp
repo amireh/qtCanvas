@@ -51,12 +51,14 @@ public:
 private slots:
     void submitQuiz();
     void saveAnswer(const QuizQuestion *qq);
+    void forceResize();
 private:
     typedef std::vector<QuestionRenderer*> Renderers;
 
     Ui::TakeQuiz *ui;
     Canvas::Quiz *mQuiz;
     Canvas::QuizSubmission *mQuizSubmission;
+    QuestionIndex *mQuestionIndex;
 
     Renderers mRenderers;
 
@@ -65,7 +67,6 @@ private:
     QWidget *renderQuestion(QuizQuestion *question);
     QFrame *renderQuestionFrame(QuizQuestion*, QWidget*);
     QWidget * renderAnswerFrame(QWidget *qqWidget);
-    QuestionIndex *mQuestionIndex;
 };
 
 #endif // TAKE_QUIZ_HPP

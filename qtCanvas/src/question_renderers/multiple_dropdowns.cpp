@@ -19,7 +19,8 @@ namespace QuestionRenderers {
     {
         MultipleDropdownsQuestion const* qq = question();
         QString qqText = QString::fromStdString(qq->text());
-        QLayout *layout = widget->layout();
+        QHBoxLayout *layout =
+                static_cast<QHBoxLayout*>(widget->layout());
 
         Fragments fragments = extractFragments(qqText);
 
@@ -36,6 +37,7 @@ namespace QuestionRenderers {
 
                 blankAnswers->setFocusPolicy(Qt::StrongFocus);
                 blankAnswers->installEventFilter( mQuestion->userData<QuestionWidget>("QWidget") );
+                blankAnswers->setSizePolicy(QSizePolicy::Maximum, QSizePolicy::Fixed);
                 blankAnswers->addItem("-", 0);
 
                 for (auto answer : qq->answers(blankId)) {
@@ -63,6 +65,8 @@ namespace QuestionRenderers {
             debug() << "pretext:" << fragment.pretext.toStdString()
                     << " => " << fragment.blankId.toStdString();
         }
+
+        layout->addStretch(1);
     }
 
     bool MultipleDropdowns::hasRenderableText()

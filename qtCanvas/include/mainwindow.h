@@ -27,6 +27,7 @@ public slots:
     void logout();
     void showSettingsDialog();
     void showAboutDialog();
+
 private:
     QApplication &mApplication;
     Ui::MainWindow *ui;
