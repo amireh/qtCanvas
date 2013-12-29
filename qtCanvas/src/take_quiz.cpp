@@ -24,7 +24,8 @@ TakeQuiz::TakeQuiz(QWidget *parent) :
     mQuiz(nullptr),
     mQuizSubmission(nullptr),
     mQuestionIndex(nullptr),
-    mPresentationFlags(0)
+    mPresentationFlags(0),
+    mActionLayout(nullptr)
 {
     ui->setupUi(this);
 
@@ -58,6 +59,10 @@ void TakeQuiz::setup()
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
 
     renderElapsedTimer();
+
+    mActionLayout = new QHBoxLayout;
+    renderActions(mActionLayout);
+    ui->quizFrameLayout->addLayout(mActionLayout, 1, 0);
 
     if (mQuiz->isOQAAT()) {
         mPresentationFlags |= QuizPresentation::OQAAT;
@@ -166,7 +171,13 @@ void TakeQuiz::renderElapsedTimer()
 {
     QClock *clockWidget = new QClock(this);
     ui->titleLayout->insertWidget(2, clockWidget);
-//    clockWidget->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+    //    clockWidget->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
+}
+
+void TakeQuiz::renderActions(QHBoxLayout *layout)
+{
+    layout->addStretch();
+    layout->addWidget(ui->submitButton);
 }
 
 QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
@@ -182,6 +193,8 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
         warn() << "Can not render questions of type " << question->type();
         return nullptr;
     }
+
+    mRenderers.push_back(renderer);
 
     qqWidget = new QuestionWidget(this, question);
     qqWidget->setObjectName("qqWidget");

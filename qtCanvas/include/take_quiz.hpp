@@ -11,6 +11,7 @@
 #include <QCheckBox>
 #include <QScrollArea>
 #include <QScrollBar>
+#include <QHBoxLayout>
 
 #include "include/qview.hpp"
 #include "include/state.h"
@@ -62,8 +63,10 @@ protected:
     QuestionIndex *mQuestionIndex;
     Renderers mRenderers;
     int mPresentationFlags;
+    QHBoxLayout *mActionLayout;
 
     void renderElapsedTimer();
+    virtual void renderActions(QHBoxLayout*);
     virtual void renderQuestions();
     QWidget *renderQuestion(QuizQuestion *question);
     QFrame *renderQuestionFrame(QuizQuestion*, QWidget*);

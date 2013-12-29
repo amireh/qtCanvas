@@ -67,11 +67,14 @@ protected:
     virtual void renderQuestions();
 
     /**
-     * @brief addNavigationButtons
+     * @override
+     * @brief renderActions
      * Attach a "Next" question button to the questionLayout(), and if the Quiz
      * allows it, attach a "Previous" question button as well.
      */
-    virtual void addNavigationButtons();
+    virtual void renderActions(QHBoxLayout *);
+
+    virtual void updateActionState();
 
     /**
      * @brief questionLayout
@@ -139,6 +142,8 @@ protected:
      * The located question, or nullptr otherwise.
      */
     QuizQuestion *locateQuestion(bool forward, int position, int *cursor = nullptr) const;
+
+    virtual bool isFocusable(QuizQuestion const*) const;
 
     /**
      * @property mCursor

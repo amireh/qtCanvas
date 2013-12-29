@@ -23,11 +23,7 @@ State::State() : Logger("qtCanvas"), mStudent(nullptr) {
 }
 
 State::~State() {
-    info() << "Cleaning up.";
-
     reset(true);
-
-    info() << "Clean.";
 }
 
 State& State::singleton() {

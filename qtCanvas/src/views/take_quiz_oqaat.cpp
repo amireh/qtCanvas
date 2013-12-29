@@ -23,8 +23,8 @@ TakeQuizOQAAT::~TakeQuizOQAAT()
 void TakeQuizOQAAT::setup()
 {
     TakeQuiz::setup();
-    addNavigationButtons();
-    mCursor = 0;
+
+    mCursor = -1;
 
     connect(mQuestionIndex, SIGNAL(questionFocused(const QuizQuestion*,QuestionWidget*)),
             this, SLOT(focusQuestion(const QuizQuestion*,QuestionWidget*)));
@@ -36,9 +36,6 @@ void TakeQuizOQAAT::prevQuestion()
 
     if (question) {
         focusQuestion(question);
-
-        mNextButton->setEnabled(true);
-        mPrevButton->setEnabled(!!locatePrevQuestion());
     }
 }
 
@@ -48,12 +45,6 @@ void TakeQuizOQAAT::nextQuestion()
 
     if (question) {
         focusQuestion(question);
-
-        if (mPrevButton) {
-            mPrevButton->setEnabled(true);
-        }
-
-        mNextButton->setEnabled(!!locateNextQuestion());
     }
 }
 
@@ -89,26 +80,52 @@ void TakeQuizOQAAT::renderQuestions()
     QTimer::singleShot(0, this, SLOT(nextQuestion()));
 }
 
-void TakeQuizOQAAT::addNavigationButtons()
+void TakeQuizOQAAT::renderActions(QHBoxLayout *btnLayout)
 {
-    QGridLayout *layout = static_cast<QGridLayout*>(ui->quizFrame->layout());
-    QHBoxLayout *btnLayout = new QHBoxLayout;
-    layout->addLayout(btnLayout, 1, 0);
-
-
-    if (!(mPresentationFlags & QuizPresentation::CantGoBack)) {
+    if (!mQuiz->cantGoBack()) {
         mPrevButton = new QPushButton(tr("Previous"), this);
+        mPrevButton->setEnabled(false);
+
         btnLayout->addWidget(mPrevButton, 0, Qt::AlignLeft);
 
         connect(mPrevButton, SIGNAL(released()), this, SLOT(prevQuestion()));
     }
 
     mNextButton = new QPushButton(tr("Next"), this);
+    mNextButton->setDefault(true);
+    mNextButton->setEnabled(false);
+
+    ui->submitButton->setVisible(false);
 
     btnLayout->addStretch();
     btnLayout->addWidget(mNextButton, 0, Qt::AlignRight);
+    btnLayout->addWidget(ui->submitButton);
 
     connect(mNextButton, SIGNAL(released()), this, SLOT(nextQuestion()));
+}
+
+void TakeQuizOQAAT::updateActionState()
+{
+    if (mPrevButton) {
+        mPrevButton->setEnabled(!!locatePrevQuestion());
+    }
+
+    auto highlight = [](QPushButton *btn, bool f = true) {
+        btn->setEnabled(f);
+        btn->setVisible(f);
+        btn->setDefault(f);
+    };
+
+    // there are still more questions
+    if (!!locateNextQuestion()) {
+        highlight(mNextButton, true);
+        highlight(ui->submitButton, false);
+    }
+    // last question
+    else {
+        highlight(ui->submitButton);
+        highlight(mNextButton, false);
+    }
 }
 
 QVBoxLayout *TakeQuizOQAAT::questionLayout()
@@ -118,6 +135,8 @@ QVBoxLayout *TakeQuizOQAAT::questionLayout()
 
 void TakeQuizOQAAT::focusQuestion(QuizQuestion const* question, bool broadcast)
 {
+    int cursor;
+
     QuestionWidget *qqWidget = question->userData<QuestionWidget>("QWidget");
     QVBoxLayout *layout = questionLayout();
 
@@ -126,6 +145,27 @@ void TakeQuizOQAAT::focusQuestion(QuizQuestion const* question, bool broadcast)
 
     layout->addWidget(qqWidget);
     layout->addStretch();
+
+    // make sure the cursor is pointing to the correct question
+    cursor = 0;
+    for (auto q : mQuiz->questions()) {
+        if (q == question) {
+            break;
+        }
+
+        ++cursor;
+    }
+
+    if (mCursor != cursor) {
+        warn() << "Cursor is out of sync:" << mCursor << " vs " << cursor;
+        warn() << "Forcing update.";
+
+        mCursor = cursor;
+    }
+
+    debug() << "Focusing QuizQuestion@" << mCursor;
+
+    updateActionState();
 
     if (broadcast) {
         qqWidget->emit focused(qqWidget);
@@ -154,7 +194,7 @@ QuizQuestion *TakeQuizOQAAT::locateQuestion(bool forward, int position, int *cur
     for (i = anchor; (forward ? i < uBound : i >= lBound); (forward ? ++i : --i)) {
         QuizQuestion *question = questions.at(i);
 
-        if (!question->isAnswered()) {
+        if (isFocusable(question)) {
             if (cursor) {
                 *cursor = i;
             }
@@ -164,4 +204,9 @@ QuizQuestion *TakeQuizOQAAT::locateQuestion(bool forward, int position, int *cur
     }
 
     return nullptr;
+}
+
+bool TakeQuizOQAAT::isFocusable(const QuizQuestion *question) const
+{
+    return !question->isAnswered();
 }
