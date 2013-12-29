@@ -48,7 +48,6 @@ void Viewport::transition(const QString &viewType)
     assertLayoutSet();
 
     ViewGenerator& generator = locator->second;
-    QView *view;
 
     if (mView) {
         detach(mView);
@@ -56,10 +55,8 @@ void Viewport::transition(const QString &viewType)
         mView = nullptr;
     }
 
-    view = generator();
-    attach(view);
-
-    mView = view;
+    mView = generator();
+    attach(mView);
 }
 
 void Viewport::registerDialog(const QString &dialogId, Viewport::DialogGenerator generator)
