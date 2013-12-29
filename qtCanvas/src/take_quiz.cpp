@@ -20,7 +20,11 @@ using Canvas::QuizSubmission;
 TakeQuiz::TakeQuiz(QWidget *parent) :
     QView(parent),
     Logger("TakeQuiz"),
-    ui(new Ui::TakeQuiz)
+    ui(new Ui::TakeQuiz),
+    mQuiz(nullptr),
+    mQuizSubmission(nullptr),
+    mQuestionIndex(nullptr),
+    mPresentationFlags(0)
 {
     ui->setupUi(this);
 
@@ -43,6 +47,8 @@ void TakeQuiz::setup()
 {
     Canvas::Session &session = State::singleton().getSession();
 
+    mPresentationFlags = 0;
+
     mQuiz = State::singleton().activeQuiz();
     mQuizSubmission = State::singleton().activeQuizSubmission();
 
@@ -52,6 +58,13 @@ void TakeQuiz::setup()
     ui->indexFrame->layout()->addWidget(mQuestionIndex);
 
     renderElapsedTimer();
+
+    if (mQuiz->isOQAAT()) {
+        mPresentationFlags |= QuizPresentation::OQAAT;
+    }
+    if (mQuiz->cantGoBack()) {
+        mPresentationFlags |= QuizPresentation::CantGoBack;
+    }
 
     mQuiz->loadQuestions(session, [&](bool success) {
         if (success) {
@@ -65,7 +78,9 @@ void TakeQuiz::setup()
                 }
             });
 
-            mQuestionIndex->render(mQuiz->questions(), ui->scrollArea);
+            mQuestionIndex->render(mQuiz->questions(),
+                                   ui->scrollArea,
+                                   mPresentationFlags);
         }
         else {
             setStatus("Error: unable to quiz questions.");
@@ -133,7 +148,8 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
 
 void TakeQuiz::renderQuestions()
 {
-    QLayout *questionLayout = ui->scrollArea->widget()->layout();
+    QVBoxLayout *questionLayout =
+            static_cast<QVBoxLayout*>(ui->quizQuestions->layout());
 
     for (auto question : mQuiz->questions()) {
         QWidget *qqWidget = renderQuestion(question);
@@ -143,7 +159,7 @@ void TakeQuiz::renderQuestions()
         }
     }
 
-    QTimer::singleShot(0, this, SLOT(forceResize()));
+    questionLayout->addStretch();
 }
 
 void TakeQuiz::renderElapsedTimer()
@@ -213,6 +229,8 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     pointsLabel =  new QLabel(QString("%1 pts").arg(qq->pointsPossible()),
                               titleWidget);
 
+    titleLabel->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
     titleLayout->setContentsMargins(0,0,0,0);
     titleLayout->addWidget(titleLabel, 0, Qt::AlignLeft);
     titleLayout->addWidget(pointsLabel, 0, Qt::AlignRight);
@@ -222,16 +240,6 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     return titleWidget;
 }
 
-void TakeQuiz::forceResize()
-{
-    debug() << "ScrollArea dimensions:" <<
-               ui->scrollArea->width()
-            << "x"
-               << ui->scrollArea->height();
-    resize(sizeHint());
-    ui->scrollArea->resize(433, 379);
-    ui->scrollArea->adjustSize();
-}
 
 void TakeQuiz::submitQuiz()
 {

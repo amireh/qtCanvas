@@ -18,3 +18,8 @@ QFrame#qqTitle QLabel {
 QLabel#quizTitleLabel {
   padding-bottom: 5px;
 }
+
+QRadioButton::indicator {
+  subcontrol-position: left top;
+  padding: 0;
+}

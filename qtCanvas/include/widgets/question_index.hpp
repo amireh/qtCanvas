@@ -10,6 +10,7 @@
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/logger.hpp>
 #include "widgets/question_widget.hpp"
+#include "qtcanvas.hpp"
 
 namespace Ui {
 class QuestionIndex;
@@ -26,8 +27,10 @@ public:
     explicit QuestionIndex(QWidget *parent = 0);
     ~QuestionIndex();
 
-    void render(Quiz::Questions const &, QScrollArea*);
+    void render(Quiz::Questions const &, QScrollArea*, int presentationFlags = QuizPresentation::Normal);
 
+signals:
+    void questionFocused(QuizQuestion const*, QuestionWidget *);
 private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void selectFocusedQuestion(QuestionWidget*);

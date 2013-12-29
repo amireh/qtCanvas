@@ -19,7 +19,9 @@ QuestionIndex::~QuestionIndex()
     delete ui;
 }
 
-void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrollArea)
+void QuestionIndex::render(Quiz::Questions const &questions,
+                           QScrollArea * scrollArea,
+                           int presentationFlags)
 {
     mScrollArea = scrollArea;
 
@@ -28,6 +30,10 @@ void QuestionIndex::render(Quiz::Questions const &questions, QScrollArea * scrol
 
     connect(ui->markButton, SIGNAL(released()),
             this, SLOT(markQuestion()));
+
+    if (presentationFlags & QuizPresentation::CantGoBack) {
+        ui->listWidget->setEnabled(false);
+    }
 
     for (auto qq : questions) {
         QListWidgetItem *qqItem = renderQuestionEntry(qq, ui->listWidget);
@@ -109,6 +115,8 @@ void QuestionIndex::on_listWidget_currentItemChanged(QListWidgetItem *current, Q
     if (qq) {
         QuestionWidget *qqWidget = qq->userData<QuestionWidget>("QWidget");
         mScrollArea->ensureWidgetVisible(qqWidget);
+
+        emit questionFocused(qq, qqWidget);
     }
 }
 

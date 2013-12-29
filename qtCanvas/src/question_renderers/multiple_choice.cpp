@@ -13,21 +13,25 @@ namespace QuestionRenderers {
 
     }
 
+    QLayout *MultipleChoice::renderLayout(QWidget *answerWidget)
+    {
+        return new QVBoxLayout(answerWidget);
+    }
+
     void MultipleChoice::render(QWidget *widget)
     {
         MultipleChoiceQuestion const* qq = question();
         QButtonGroup *answerButtons = new QButtonGroup(widget);
-        QLayout *layout = widget->layout();
+        QVBoxLayout *layout = static_cast<QVBoxLayout*>(widget->layout());
 
         debug() << "Rendering a MultipleChoice question: " << qq->id();
 
         for (auto answer : qq->answers()) {
             QRadioButton *answerRadio = new QRadioButton(QString::fromStdString(answer->text()), widget);
             answerRadio->setProperty("answerId", answer->id());
-//            answerRadio->setProperty("qq", QVariant::fromValue(PQuizQuestion(qq)));
             answerRadio->setChecked(qq->chosenAnswer() == answer);
-            layout->addWidget(answerRadio);
             answerButtons->addButton(answerRadio);
+            layout->addWidget(answerRadio);
         }
 
         QObject::connect(answerButtons, SIGNAL(buttonReleased(QAbstractButton*)),

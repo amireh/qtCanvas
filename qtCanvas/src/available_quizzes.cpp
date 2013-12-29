@@ -308,6 +308,7 @@ void AvailableQuizzes::updateQuizStatus(const Canvas::QuizSubmission &qs)
 void AvailableQuizzes::takeQuiz()
 {
     PQuiz selectedQuiz = ui->treeWidget->currentItem()->data(100, 0x0100).value<PQuiz>();
+    Canvas::Quiz *quiz = *selectedQuiz;
 
     if (selectedQuiz) {
         Canvas::Student &student = State::singleton().getStudent();
@@ -315,12 +316,17 @@ void AvailableQuizzes::takeQuiz()
 
         setStatus("Requesting a quiz-taking session...");
 
-        student.takeQuiz(session, **selectedQuiz, [&](QuizSubmission const* qs) {
+        student.takeQuiz(session, *quiz, [&](QuizSubmission const* qs) {
             if (qs) {
-                State::singleton().setActiveQuiz(*selectedQuiz);
+                State::singleton().setActiveQuiz(quiz);
                 State::singleton().setActiveQuizSubmission((QuizSubmission*)qs);
 
-                Viewport::singleton().transition("TakeQuiz");
+                if (quiz->isOQAAT()) {
+                    Viewport::singleton().transition("TakeQuizOQAAT");
+                }
+                else {
+                    Viewport::singleton().transition("TakeQuiz");
+                }
             }
             else {
                 setStatus("Error: the Canvas server has rejected your request.");

@@ -8,6 +8,7 @@
 #include "include/login.h"
 #include "include/available_quizzes.h"
 #include "include/take_quiz.hpp"
+#include "include/views/take_quiz_oqaat.hpp"
 #include "include/dialogs/settings_dialog.hpp"
 #include "include/dialogs/about_dialog.hpp"
 

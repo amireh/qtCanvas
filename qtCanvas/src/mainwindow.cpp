@@ -18,6 +18,9 @@ MainWindow::MainWindow(QWidget *parent, QApplication &app) :
     viewport.registerView("Login", []() -> QView* { return new Login; });
     viewport.registerView("AvailableQuizzes", []() -> QView* { return new AvailableQuizzes; });
     viewport.registerView("TakeQuiz", []() -> QView* { return new TakeQuiz; });
+    viewport.registerView("TakeQuizOQAAT", []() -> QView* {
+                              return new TakeQuizOQAAT;
+                          });
     viewport.registerDialog("Settings", []() -> QDialog* { return new SettingsDialog; });
     viewport.registerDialog("About", []() -> QDialog* { return new AboutDialog; });
 

@@ -14,6 +14,7 @@
 
 #include "include/qview.hpp"
 #include "include/state.h"
+#include "qtcanvas.hpp"
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/resources/quiz_question.hpp>
@@ -41,7 +42,7 @@ class TakeQuiz : public QView, public Canvas::Logger
 
 public:
     explicit TakeQuiz(QWidget *parent = 0);
-    ~TakeQuiz();
+    virtual ~TakeQuiz();
 
     virtual void setup();
     virtual void cleanup();
@@ -51,22 +52,23 @@ public:
 private slots:
     void submitQuiz();
     void saveAnswer(const QuizQuestion *qq);
-    void forceResize();
-private:
+
+protected:
     typedef std::vector<QuestionRenderer*> Renderers;
 
     Ui::TakeQuiz *ui;
     Canvas::Quiz *mQuiz;
     Canvas::QuizSubmission *mQuizSubmission;
     QuestionIndex *mQuestionIndex;
-
     Renderers mRenderers;
+    int mPresentationFlags;
 
-    void renderQuestions();
     void renderElapsedTimer();
+    virtual void renderQuestions();
     QWidget *renderQuestion(QuizQuestion *question);
     QFrame *renderQuestionFrame(QuizQuestion*, QWidget*);
     QWidget * renderAnswerFrame(QWidget *qqWidget);
+
 };
 
 #endif // TAKE_QUIZ_HPP

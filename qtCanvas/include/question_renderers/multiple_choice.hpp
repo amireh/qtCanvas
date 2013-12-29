@@ -8,8 +8,8 @@
 #include "question_renderer.hpp"
 
 #include <QVariant>
-#include <QRadioButton>
 #include <QLabel>
+#include <QRadioButton>
 #include <QGroupBox>
 #include <QButtonGroup>
 #include <QLayout>
@@ -26,8 +26,8 @@ namespace QuestionRenderers {
         MultipleChoice(QuizQuestion *qq);
         virtual ~MultipleChoice();
 
+        virtual QLayout *renderLayout(QWidget *answerWidget);
         virtual void render(QWidget*);
-
     private slots:
         void chooseAnswer(QAbstractButton *answerButton);
 

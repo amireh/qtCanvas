@@ -26,7 +26,8 @@ macx {
 INCLUDEPATH += $${ROOT_DIRECTORY}/qtCanvas/include
 FILES = $$cat($${ROOT_DIRECTORY}/qtCanvas/qtCanvas.files)
 
-HEADERS = $$find(FILES, "include/.*\.h(pp|xx)?")
+HEADERS = $$find(FILES, "include/.*\.h(pp|xx)?") \
+    include/qtcanvas.hpp
 HEADERS = $$replace(HEADERS, "include","$${ROOT_DIRECTORY}/qtCanvas/include")
 HEADERS = $$unique(HEADERS)
 
