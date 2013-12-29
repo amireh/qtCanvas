@@ -235,11 +235,17 @@ void AvailableQuizzes::loadCourseQuizzes(Canvas::Course const &course)
 }
 
 void AvailableQuizzes::loadQuizSubmission(const Canvas::Quiz &quiz) {
-    Canvas::Student& student = State::singleton().getStudent();
+    Canvas::Student &student = State::singleton().getStudent();
     Canvas::Session &session = State::singleton().getSession();
+
+    int quizId = quiz.id();
 
     student.loadQuizSubmission(session, quiz, [&](bool success) {
         if (success) {
+//            Canvas::Student &student = State::singleton().getStudent();
+            debug() << "quiz: " << quiz.id();
+            debug() << "student: " << student.id();
+
             emit quizSubmissionLoaded(*student.quizSubmission(quiz));
         }
     });
@@ -316,7 +322,7 @@ void AvailableQuizzes::takeQuiz()
 
         setStatus("Requesting a quiz-taking session...");
 
-        student.takeQuiz(session, *quiz, [&](QuizSubmission const* qs) {
+        student.takeQuiz(session, *quiz, [&, quiz](QuizSubmission const* qs) {
             if (qs) {
                 State::singleton().setActiveQuiz(quiz);
                 State::singleton().setActiveQuizSubmission((QuizSubmission*)qs);

@@ -46,7 +46,7 @@ private slots:
      *
      * Delegates to focusQuestion() with no broadcast.
      */
-    void focusQuestion(const QuizQuestion *question, QuestionWidget *);
+    void requestFocusQuestion(const QuizQuestion *question, QuestionWidget *);
 
 protected:
     /**
@@ -95,7 +95,7 @@ protected:
      * When true, QuestionWidget::focused() will be emitted so that other
      * interested components may update.
      */
-    void focusQuestion(const QuizQuestion *question, bool broadcast = true);
+    void focusQuestion(QuizQuestion *question, bool broadcast = true);
 
     /**
      * @brief locatePrevQuestion

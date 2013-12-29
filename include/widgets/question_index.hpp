@@ -34,7 +34,7 @@ signals:
 private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void selectFocusedQuestion(QuestionWidget*);
-    void updateQuestionStatus(const QuizQuestion*);
+    void updateQuestionStatus(QuizQuestion const*);
     void markQuestion();
 private:
     Ui::QuestionIndex *ui;

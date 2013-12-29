@@ -132,7 +132,7 @@ void QuestionIndex::selectFocusedQuestion(QuestionWidget *qqWidget)
     }
 }
 
-void QuestionIndex::updateQuestionStatus(const Canvas::QuizQuestion *qq)
+void QuestionIndex::updateQuestionStatus(Canvas::QuizQuestion const *qq)
 {
     QListWidgetItem *qqItem = qq->userData<QListWidgetItem>("IndexItem");
 
@@ -161,7 +161,7 @@ void QuestionIndex::markQuestion()
 
     qq->mark(!qq->isMarked());
 
-    qs->save(qq, session, [&](bool success) {
+    qs->save(qq, session, [&, qq](bool success) {
         if (success) {
             Viewport::singleton().setStatus(QString("Question %1")
                                             .arg(qq->isMarked() ? "marked" : "unmarked."));

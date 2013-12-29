@@ -33,7 +33,9 @@ namespace Ui {
 class TakeQuiz;
 }
 
+using Canvas::Quiz;
 using Canvas::QuizQuestion;
+using Canvas::QuizSubmission;
 
 typedef Canvas::QuizQuestions::MultipleChoice MultipleChoiceQuestion;
 
@@ -50,7 +52,13 @@ public:
 
     virtual QuestionRenderer* generateRenderer(QuizQuestion *);
 
+signals:
+    void questionsLoaded(Quiz*);
+    void answersLoaded(QuizSubmission*);
+
 private slots:
+    void loadAnswers(Quiz*);
+    void render(QuizSubmission*);
     void submitQuiz();
     void saveAnswer(const QuizQuestion *qq);
 

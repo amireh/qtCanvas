@@ -29,8 +29,12 @@ TakeQuiz::TakeQuiz(QWidget *parent) :
 {
     ui->setupUi(this);
 
-    QObject::connect(ui->submitButton, SIGNAL(released()),
-                     this, SLOT(submitQuiz()));
+    connect(this, SIGNAL(questionsLoaded(Quiz*)),
+            this, SLOT(loadAnswers(Quiz*)));
+    connect(this, SIGNAL(answersLoaded(QuizSubmission*)),
+            this, SLOT(render(QuizSubmission*)));
+
+    connect(ui->submitButton, SIGNAL(released()), this, SLOT(submitQuiz()));
 }
 
 TakeQuiz::~TakeQuiz()
@@ -73,19 +77,7 @@ void TakeQuiz::setup()
 
     mQuiz->loadQuestions(session, [&](bool success) {
         if (success) {
-            mQuizSubmission->loadAnswers(session, [&](bool success) {
-                if (success) {
-                    renderQuestions();
-                    setStatus("Ready.");
-                }
-                else {
-                    setStatus("Error: unable to load answers.");
-                }
-            });
-
-            mQuestionIndex->render(mQuiz->questions(),
-                                   ui->scrollArea,
-                                   mPresentationFlags);
+            emit questionsLoaded(mQuiz);
         }
         else {
             setStatus("Error: unable to quiz questions.");
@@ -150,6 +142,35 @@ QuestionRenderer *TakeQuiz::generateRenderer(QuizQuestion *qq)
     return nullptr;
 }
 
+void TakeQuiz::loadAnswers(Quiz *)
+{
+    Canvas::Session& session = State::singleton().getSession();
+
+    QuizSubmission *qs = mQuizSubmission;
+
+    assert(qs);
+
+    qs->loadAnswers(session, [&, qs](bool success) {
+        if (success) {
+            emit answersLoaded(qs);
+        }
+        else {
+            setStatus("Error: unable to load answers.");
+        }
+    });
+}
+
+void TakeQuiz::render(QuizSubmission *)
+{
+    renderQuestions();
+
+    mQuestionIndex->render(mQuiz->questions(),
+                           ui->scrollArea,
+                           mPresentationFlags);
+
+    setStatus("Ready.");
+}
+
 
 void TakeQuiz::renderQuestions()
 {
@@ -171,7 +192,6 @@ void TakeQuiz::renderElapsedTimer()
 {
     QClock *clockWidget = new QClock(this);
     ui->titleLayout->insertWidget(2, clockWidget);
-    //    clockWidget->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
 }
 
 void TakeQuiz::renderActions(QHBoxLayout *layout)
@@ -198,7 +218,7 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
 
     qqWidget = new QuestionWidget(this, question);
     qqWidget->setObjectName("qqWidget");
-    qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
+//    qqWidget->setProperty("qq", QVariant::fromValue(PQuizQuestion(question)));
     question->setUserData<QuestionWidget>("QWidget", qqWidget);
 
     qqLayout = new QGridLayout(qqWidget);
@@ -231,7 +251,6 @@ QFrame* TakeQuiz::renderQuestionFrame(Canvas::QuizQuestion *qq, QWidget *widget)
     QLabel *titleLabel;
     QLabel *pointsLabel;
 
-//    qqTitle = QString::fromStdString(qq->name();
     qqTitle = QString("Question %1").arg(qq->position());
 
     // Question title widget:
@@ -289,7 +308,7 @@ void TakeQuiz::saveAnswer(QuizQuestion const* qq)
 
     setStatus("Saving your answer...");
 
-    mQuizSubmission->save(qq, session, [&](bool success) {
+    mQuizSubmission->save(qq, session, [&, qq](bool success) {
         if (success) {
             setStatus("Answer saved.");
             State::singleton().emit questionModified(qq);

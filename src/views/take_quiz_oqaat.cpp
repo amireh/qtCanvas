@@ -26,7 +26,7 @@ void TakeQuizOQAAT::setup()
     mCursor = -1;
 
     connect(mQuestionIndex, SIGNAL(questionFocused(const QuizQuestion*,QuestionWidget*)),
-            this, SLOT(focusQuestion(const QuizQuestion*,QuestionWidget*)));
+            this, SLOT(requestFocusQuestion(const QuizQuestion*,QuestionWidget*)));
 }
 
 void TakeQuizOQAAT::prevQuestion()
@@ -47,9 +47,9 @@ void TakeQuizOQAAT::nextQuestion()
     }
 }
 
-void TakeQuizOQAAT::focusQuestion(const QuizQuestion *question, QuestionWidget *)
+void TakeQuizOQAAT::requestFocusQuestion(const QuizQuestion *question, QuestionWidget *)
 {
-    focusQuestion(question, false);
+    focusQuestion((QuizQuestion*)question, false);
 }
 
 void TakeQuizOQAAT::clearLayout(QVBoxLayout *layout)
@@ -132,7 +132,7 @@ QVBoxLayout *TakeQuizOQAAT::questionLayout()
     return static_cast<QVBoxLayout*>(ui->quizQuestions->layout());
 }
 
-void TakeQuizOQAAT::focusQuestion(QuizQuestion const* question, bool broadcast)
+void TakeQuizOQAAT::focusQuestion(QuizQuestion* question, bool broadcast)
 {
     int cursor;
 

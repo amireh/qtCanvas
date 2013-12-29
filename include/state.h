@@ -13,6 +13,7 @@
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/resources/quiz_question.hpp>
 #include <vector>
+#include "async_session.hpp"
 
 using Canvas::QuizQuestion;
 
@@ -47,7 +48,7 @@ private:
     static State *ginstance;
 
     Canvas::Student *mStudent;
-    Canvas::Session mSession;
+    AsyncSession mSession;
     Canvas::Quiz *mActiveQuiz;
     Canvas::QuizSubmission *mActiveQuizSubmission;
 };

@@ -35,3 +35,9 @@ win32 {
 unix {
   LIBS += -lcanvas -ljsoncpp
 }
+
+HEADERS += \
+    include/async_session.hpp
+
+SOURCES += \
+    src/async_session.cpp
