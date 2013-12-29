@@ -1,6 +1,6 @@
 
 TEMPLATE = app
-TARGET = qtcanvas
+TARGET = qtCanvas
 INCLUDEPATH += . \
                include \
                include/views \
@@ -11,7 +11,7 @@ INCLUDEPATH += . \
 
 HEADERS +=           include/mainwindow.h \
            include/qproxy.hpp \
-           include/qtcanvas.hpp \
+           include/qtCanvas.hpp \
            include/question_renderer.hpp \
            include/qview.hpp \
            include/state.h \

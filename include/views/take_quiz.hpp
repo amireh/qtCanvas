@@ -15,7 +15,7 @@
 
 #include "include/qview.hpp"
 #include "include/state.h"
-#include "qtcanvas.hpp"
+#include "qtCanvas.hpp"
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/resources/quiz_question.hpp>

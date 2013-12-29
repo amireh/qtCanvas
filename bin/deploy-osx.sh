@@ -9,11 +9,11 @@
 # available.
 #
 # NOTE:
-# 	This script is expected to run with qtcanvas/bin as the working directory
+# 	This script is expected to run with qtCanvas/bin as the working directory
 # 	and AFTER you've generated the app bundle using Qt Creator.
 #
 # USAGE:
-# 	cd /path/to/qtcanvas/bin
+# 	cd /path/to/qtCanvas/bin
 # 	./deploy-osx.sh
 
 BUNDLE="./qtCanvas.app"

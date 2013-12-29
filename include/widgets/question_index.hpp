@@ -10,7 +10,7 @@
 #include <canvas/resources/quiz_submission.hpp>
 #include <canvas/logger.hpp>
 #include "widgets/question_widget.hpp"
-#include "qtcanvas.hpp"
+#include "qtCanvas.hpp"
 
 namespace Ui {
 class QuestionIndex;

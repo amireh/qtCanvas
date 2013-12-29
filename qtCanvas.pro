@@ -1,4 +1,4 @@
-include(qtcanvas.files)
+include(qtCanvas.files)
 
 ROOT_DIRECTORY  = $$PWD
 BIN_DIRECTORY   = $${ROOT_DIRECTORY}/bin
@@ -25,7 +25,7 @@ macx {
 }
 
 win32 {
-  RC_FILE = qtcanvas.rc
+  RC_FILE = qtCanvas.rc
 
   CONFIG(release, debug|release) {
     LIBS += -lcanvas
