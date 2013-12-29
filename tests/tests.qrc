@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>fixture/quiz.json</file>
-        <file>fixture/quiz_questions.json</file>
-        <file>fixture/quiz_submission_questions.json</file>
-        <file>fixture/quiz_submission.json</file>
-    </qresource>
-</RCC>

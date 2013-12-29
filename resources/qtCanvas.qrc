@@ -1,0 +1,12 @@
+<RCC>
+    <qresource prefix="/">
+        <file>qtCanvas.css</file>
+        <file>icons/emblem-default.png</file>
+        <file>icons/emblem-important.png</file>
+        <file>icons/emblem-unreadable.png</file>
+        <file>icons/emblem-success.png</file>
+        <file>images/logo.png</file>
+        <file>icons/canvas.icns</file>
+        <file>icons/canvas.ico</file>
+    </qresource>
+</RCC>

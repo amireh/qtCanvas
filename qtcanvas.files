@@ -1,0 +1,77 @@
+
+TEMPLATE = app
+TARGET = qtcanvas
+INCLUDEPATH += . \
+               include \
+               include/views \
+               include/widgets \
+               include/dialogs \
+               build \
+               include/question_renderers
+
+HEADERS +=           include/mainwindow.h \
+           include/qproxy.hpp \
+           include/qtcanvas.hpp \
+           include/question_renderer.hpp \
+           include/qview.hpp \
+           include/state.h \
+           include/type_exports.hpp \
+           include/viewport.h \
+           include/dialogs/about_dialog.hpp \
+           include/dialogs/settings_dialog.hpp \
+           include/question_renderers/calculated.hpp \
+           include/question_renderers/essay.hpp \
+           include/question_renderers/fill_in_multiple_blanks.hpp \
+           include/question_renderers/fill_in_the_blank.hpp \
+           include/question_renderers/matching.hpp \
+           include/question_renderers/multiple_answers.hpp \
+           include/question_renderers/multiple_choice.hpp \
+           include/question_renderers/multiple_dropdowns.hpp \
+           include/question_renderers/numerical.hpp \
+           include/question_renderers/true_false.hpp \
+           include/views/available_quizzes.hpp \
+           include/views/login.hpp \
+           include/views/take_quiz.hpp \
+           include/views/take_quiz_oqaat.hpp \
+           include/widgets/qclock.hpp \
+           include/widgets/qradiobutton.hpp \
+           include/widgets/qtextedit.hpp \
+           include/widgets/question_index.hpp \
+           include/widgets/question_widget.hpp
+FORMS += ui/dialogs/about_dialog.ui \
+         ui/dialogs/settings_dialog.ui \
+         ui/views/available_quizzes.ui \
+         ui/views/login.ui \
+         ui/views/mainwindow.ui \
+         ui/views/take_quiz.ui \
+         ui/widgets/qclock.ui \
+         ui/widgets/question_index.ui
+SOURCES +=           src/main.cpp \
+           src/mainwindow.cpp \
+           src/qproxy.cpp \
+           src/question_renderer.cpp \
+           src/qview.cpp \
+           src/state.cpp \
+           src/viewport.cpp \
+           src/dialogs/about_dialog.cpp \
+           src/dialogs/settings_dialog.cpp \
+           src/question_renderers/calculated.cpp \
+           src/question_renderers/essay.cpp \
+           src/question_renderers/fill_in_multiple_blanks.cpp \
+           src/question_renderers/fill_in_the_blank.cpp \
+           src/question_renderers/matching.cpp \
+           src/question_renderers/multiple_answers.cpp \
+           src/question_renderers/multiple_choice.cpp \
+           src/question_renderers/multiple_dropdowns.cpp \
+           src/question_renderers/numerical.cpp \
+           src/question_renderers/true_false.cpp \
+           src/views/available_quizzes.cpp \
+           src/views/login.cpp \
+           src/views/take_quiz.cpp \
+           src/views/take_quiz_oqaat.cpp \
+           src/widgets/qclock.cpp \
+           src/widgets/qradiobutton.cpp \
+           src/widgets/qtextedit.cpp \
+           src/widgets/question_index.cpp \
+           src/widgets/question_widget.cpp
+RESOURCES += resources/qtCanvas.qrc
