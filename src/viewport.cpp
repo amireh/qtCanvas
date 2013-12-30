@@ -69,9 +69,9 @@ void Viewport::attach(QView *view) {
     view->show();
     view->setup();
 
-    if (mMainWindow) {
-        QTimer::singleShot(1, this, SLOT(fitToContents()));
-    }
+//    if (mMainWindow) {
+//        QTimer::singleShot(1, this, SLOT(fitToContents()));
+//    }
 
     debug() << "attaching view" << view;
 }
@@ -156,35 +156,6 @@ void Viewport::fitToContents()
 
     QSize hint = mMainWindow->sizeHint();
 
-    if (mView->sizeHint().width() > hint.width()) {
-        hint = mView->sizeHint();
-    }
-
-    debug() << "Widget size:"
-               << QString("%1x%2")
-                  .arg(mView->size().width())
-                  .arg(mView->size().height())
-                  .toStdString();
-
-    debug() << "Widget normalGeometry:"
-               << QString("%1x%2")
-                  .arg(mView->normalGeometry().width())
-                  .arg(mView->normalGeometry().height())
-                  .toStdString();
-
-    debug() << "Widget sizeHint:"
-               << QString("%1x%2")
-                  .arg(mView->sizeHint().width())
-                  .arg(mView->sizeHint().height())
-                  .toStdString();
-
-    debug() << "Window's sizeHint:"
-               << QString("%1x%2")
-                  .arg(mMainWindow->sizeHint().width())
-                  .arg(mMainWindow->sizeHint().height())
-                  .toStdString();
-
-//    mMainWindow->centralWidget()->resize(hint);
-//    mMainWindow->resize(hint);
-//    mMainWindow->adjustSize();
+    mMainWindow->centralWidget()->resize(hint);
+    mMainWindow->resize(hint);
 }
