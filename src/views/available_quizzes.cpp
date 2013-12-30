@@ -290,6 +290,8 @@ void AvailableQuizzes::updateQuizStatus(Canvas::QuizSubmission *qs)
     QString status;
     Canvas::Quiz const* quiz = qs->quiz();
     QTreeWidgetItem *treeItem = quizTreeItem(quiz);
+    Canvas::Student &student = State::singleton().getStudent();
+    bool retakable = false;
 
     if (!treeItem) {
         error() << "Unable to find tree item for Quiz#" << quiz->id() << ". "
@@ -305,7 +307,13 @@ void AvailableQuizzes::updateQuizStatus(Canvas::QuizSubmission *qs)
     }
     else if (qs->isComplete()) {
         status = "Complete";
-        treeItem->setDisabled(true);
+        retakable = student.canTakeQuiz(*quiz);
+
+        if (retakable) {
+            status += " (re-takable)";
+        }
+
+        treeItem->setDisabled(!retakable);
     }
     else if (qs->isPendingReview()) {
         status = "Under Review";
