@@ -10,7 +10,7 @@ State::State() : Logger("qtCanvas"), mStudent(nullptr) {
     QSettings settings;
 
     Canvas::Settings::set("canvas_host",
-                          settings.value("canvas/host", "http://localhost")
+                          settings.value("canvas/host", "http://kodoware.com")
                             .toString()
                             .toStdString());
 

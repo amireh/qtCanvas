@@ -7,7 +7,7 @@ DESTDIR         = $${BIN_DIRECTORY}
 OBJECTS_DIR     = $${BUILD_DIRECTORY}/$${TARGET}
 MOC_DIR         = $${BUILD_DIRECTORY}/$${TARGET}
 
-VERSION = 1.0.1
+VERSION = 1.0.4
 
 QT = core gui
 
