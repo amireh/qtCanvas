@@ -9,7 +9,6 @@ Viewport::Viewport()
       mView(nullptr),
       errorMessageDialog(nullptr)
 {
-//    errorMessageDialog = new QErrorMessage(this);
 }
 
 Viewport::~Viewport() {
@@ -61,7 +60,7 @@ void Viewport::transition(const QString &viewType)
 
 void Viewport::registerDialog(const QString &dialogId, Viewport::DialogGenerator generator)
 {
-    mDialogs.insert(std::make_pair(dialogId, generator));
+    mDialogGenerators.insert(std::make_pair(dialogId, generator));
 }
 
 void Viewport::attach(QView *view) {
@@ -122,22 +121,19 @@ void Viewport::registerView(const QString &viewId, ViewGenerator generator)
     mViews.insert(std::make_pair(viewId, generator));
 }
 
-int Viewport::showDialog(const QString &dialogId)
+int Viewport::showDialog(const QString &id)
 {
-    DialogGenerators::const_iterator itr = mDialogs.find(dialogId);
+    DialogGenerators::const_iterator dialogGenerator = mDialogGenerators.find(id);
 
-    if (itr == mDialogs.end()) {
-        throw std::invalid_argument("Can not create dialogs of type " + dialogId.toStdString());
+    if (dialogGenerator == mDialogGenerators.end()) {
+        throw std::invalid_argument("Can not create dialogs of type " + id.toStdString());
     }
 
-    if (mDialog) {
-        mDialog->close();
-        mDialog->layout()->removeWidget(mDialog);
-        mDialog = nullptr;
-    }
+    QDialog *dialog = dialogGenerator->second();
 
-    mDialog = itr->second();
-    return mDialog->exec();
+    connect(dialog, SIGNAL(finished(int)), dialog, SLOT(deleteLater()));
+
+    return dialog->exec();
 }
 
 QErrorMessage *Viewport::errorDialog()

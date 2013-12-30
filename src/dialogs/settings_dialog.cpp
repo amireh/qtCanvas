@@ -17,16 +17,11 @@ SettingsDialog::SettingsDialog(QWidget *parent) :
     ui->canvasApiHostText->setText(settings.value("canvas/host", defaultHost).toString());
     ui->canvasApiPortText->setText(settings.value("canvas/port", defaultPort).toString());
 
-    connect(ui->canvasApiHostText, SIGNAL(editingFinished()),
-            this, SLOT(saveSettings()));
-
-    connect(ui->canvasApiPortText, SIGNAL(editingFinished()),
-            this, SLOT(saveSettings()));
+    connect(this, SIGNAL(accepted()), this, SLOT(saveSettings()));
 }
 
 SettingsDialog::~SettingsDialog()
 {
-    saveSettings();
     delete ui;
 }
 

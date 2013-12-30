@@ -15,15 +15,16 @@ class SettingsDialog : public QDialog
 
 public:
     explicit SettingsDialog(QWidget *parent = 0);
-    ~SettingsDialog();
+    virtual ~SettingsDialog();
 
 private slots:
     void saveSettings();
-    void changeApiHost();
-    void changeApiPort();
 private:
     Ui::SettingsDialog *ui;
     QSettings mSettings;
+
+    void changeApiHost();
+    void changeApiPort();
 };
 
 #endif // SETTINGS_DIALOG_HPP

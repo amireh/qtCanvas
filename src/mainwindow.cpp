@@ -22,8 +22,12 @@ MainWindow::MainWindow(QWidget *parent, QApplication &app) :
     viewport.registerView("TakeQuizOQAAT", []() -> QView* {
                               return new TakeQuizOQAAT;
                           });
-    viewport.registerDialog("Settings", []() -> QDialog* { return new SettingsDialog; });
-    viewport.registerDialog("About", []() -> QDialog* { return new AboutDialog; });
+    viewport.registerDialog("Settings", [&]() -> QDialog* {
+                                return new SettingsDialog(this);
+                            });
+    viewport.registerDialog("About", [&]() -> QDialog* {
+                                return new AboutDialog(this);
+                            });
 
     QFile css(":/qtCanvas.css");
 

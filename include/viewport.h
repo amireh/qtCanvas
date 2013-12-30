@@ -82,13 +82,12 @@ protected:
 
     QLayout *mLayout;
     QView *mView;
-    QDialog *mDialog;
     QStatusBar *mStatusBar;
     QToolBar *mToolBar;
     QMainWindow *mMainWindow;
     QErrorMessage *errorMessageDialog;
     ViewGenerators mViews;
-    DialogGenerators mDialogs;
+    DialogGenerators mDialogGenerators;
 private:
     Viewport();
     static Viewport* gInstance;
