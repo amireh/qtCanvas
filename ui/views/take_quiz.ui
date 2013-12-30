@@ -29,18 +29,6 @@
    <property name="sizeConstraint">
     <enum>QLayout::SetMinAndMaxSize</enum>
    </property>
-   <property name="leftMargin">
-    <number>0</number>
-   </property>
-   <property name="topMargin">
-    <number>0</number>
-   </property>
-   <property name="rightMargin">
-    <number>0</number>
-   </property>
-   <property name="bottomMargin">
-    <number>0</number>
-   </property>
    <item row="1" column="0">
     <layout class="QHBoxLayout" name="horizontalLayout">
      <property name="sizeConstraint">
@@ -106,15 +94,15 @@
         <item row="0" column="0">
          <widget class="QScrollArea" name="scrollArea">
           <property name="sizePolicy">
-           <sizepolicy hsizetype="Expanding" vsizetype="MinimumExpanding">
+           <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
             <horstretch>1</horstretch>
             <verstretch>0</verstretch>
            </sizepolicy>
           </property>
           <property name="minimumSize">
            <size>
-            <width>393</width>
-            <height>241</height>
+            <width>480</width>
+            <height>320</height>
            </size>
           </property>
           <property name="frameShape">
@@ -124,23 +112,15 @@
            <bool>true</bool>
           </property>
           <widget class="QWidget" name="quizQuestions">
-           <property name="geometry">
-            <rect>
-             <x>0</x>
-             <y>0</y>
-             <width>393</width>
-             <height>265</height>
-            </rect>
-           </property>
            <property name="sizePolicy">
-            <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+            <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
              <horstretch>1</horstretch>
              <verstretch>0</verstretch>
             </sizepolicy>
            </property>
            <layout class="QVBoxLayout" name="verticalLayout_4">
             <property name="sizeConstraint">
-             <enum>QLayout::SetDefaultConstraint</enum>
+             <enum>QLayout::SetMinAndMaxSize</enum>
             </property>
             <property name="leftMargin">
              <number>0</number>

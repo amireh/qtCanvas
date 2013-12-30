@@ -186,6 +186,9 @@ void TakeQuiz::renderQuestions()
     }
 
     questionLayout->addStretch();
+    ui->scrollArea->adjustSize();
+    adjustSize();
+    QTimer::singleShot(1, &Viewport::singleton(), SLOT(fitToContents()));
 }
 
 void TakeQuiz::renderElapsedTimer()
@@ -222,6 +225,7 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     question->setUserData<QuestionWidget>("QWidget", qqWidget);
 
     qqLayout = new QGridLayout(qqWidget);
+    qqLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
     qqTitleFrame = renderQuestionFrame(question, qqWidget);
     answerWidget = renderer->renderFrame(qqWidget);
@@ -233,7 +237,6 @@ QWidget* TakeQuiz::renderQuestion(QuizQuestion* question) {
     }
 
     qqLayout->addWidget(answerWidget);
-    qqLayout->setSizeConstraint(QLayout::SetMinimumSize);
 
     renderer->render(answerWidget);
 

@@ -1,17 +1,21 @@
 #ifndef VIEWPORT_H
 #define VIEWPORT_H
 
+#include <QObject>
 #include <QWidget>
 #include <QLayout>
 #include <QStatusBar>
 #include <QToolBar>
 #include <QErrorMessage>
+#include <QMainWindow>
+#include <QTimer>
 #include <map>
 #include <canvas/logger.hpp>
 #include "include/qview.hpp"
 
-class Viewport : public Canvas::Logger
+class Viewport : public QObject, public Canvas::Logger
 {
+    Q_OBJECT
 public:
     typedef std::function<QView*()> ViewGenerator;
     typedef std::function<QDialog*()> DialogGenerator;
@@ -23,6 +27,7 @@ public:
     void setStatusBar(QStatusBar*);
     void setToolBar(QToolBar*);
     void setStatus(QString const&);
+    void setMainWindow(QMainWindow *);
 
     QToolBar* getToolBar() const;
     QStatusBar* getStatusBar() const;
@@ -64,6 +69,9 @@ public:
 
     QErrorMessage* errorDialog();
 
+public slots:
+    void fitToContents();
+
 protected:
     typedef std::map<QString, ViewGenerator> ViewGenerators;
     typedef std::map<QString, DialogGenerator> DialogGenerators;
@@ -77,6 +85,7 @@ protected:
     QDialog *mDialog;
     QStatusBar *mStatusBar;
     QToolBar *mToolBar;
+    QMainWindow *mMainWindow;
     QErrorMessage *errorMessageDialog;
     ViewGenerators mViews;
     DialogGenerators mDialogs;

@@ -12,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent, QApplication &app) :
 
     bindMenuActions();
 
+    viewport.setMainWindow(this);
     viewport.setLayout(ui->centralWidget->layout());
     viewport.setStatusBar(ui->statusBar);
 

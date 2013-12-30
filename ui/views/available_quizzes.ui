@@ -2,20 +2,30 @@
 <ui version="4.0">
  <class>AvailableQuizzes</class>
  <widget class="QWidget" name="AvailableQuizzes">
-  <property name="geometry">
-   <rect>
-    <x>0</x>
-    <y>0</y>
-    <width>400</width>
-    <height>300</height>
-   </rect>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>720</width>
+    <height>320</height>
+   </size>
   </property>
   <property name="windowTitle">
    <string>Form</string>
   </property>
   <layout class="QVBoxLayout" name="verticalLayout">
+   <property name="sizeConstraint">
+    <enum>QLayout::SetDefaultConstraint</enum>
+   </property>
    <item>
     <widget class="QTreeWidget" name="treeWidget">
+     <property name="alternatingRowColors">
+      <bool>true</bool>
+     </property>
      <property name="rootIsDecorated">
       <bool>true</bool>
      </property>
@@ -31,6 +41,9 @@
      <property name="allColumnsShowFocus">
       <bool>false</bool>
      </property>
+     <property name="wordWrap">
+      <bool>true</bool>
+     </property>
      <property name="headerHidden">
       <bool>false</bool>
      </property>
@@ -40,12 +53,21 @@
      <attribute name="headerDefaultSectionSize">
       <number>160</number>
      </attribute>
+     <attribute name="headerHighlightSections">
+      <bool>true</bool>
+     </attribute>
      <attribute name="headerStretchLastSection">
       <bool>true</bool>
      </attribute>
      <column>
       <property name="text">
        <string>Name</string>
+      </property>
+      <property name="font">
+       <font>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
       </property>
      </column>
      <column>
@@ -74,9 +96,6 @@
       <string>&amp;Take Quiz</string>
      </property>
     </widget>
-   </item>
-   <item>
-    <layout class="QHBoxLayout" name="horizontalLayout"/>
    </item>
   </layout>
  </widget>

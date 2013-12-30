@@ -279,6 +279,7 @@ void AvailableQuizzes::updateQuizStatus(Canvas::Quiz *quiz)
     }
     else {
         status = "Not Available";
+        treeItem->setDisabled(true);
     }
 
     treeItem->setText(1, status);
@@ -304,6 +305,7 @@ void AvailableQuizzes::updateQuizStatus(Canvas::QuizSubmission *qs)
     }
     else if (qs->isComplete()) {
         status = "Complete";
+        treeItem->setDisabled(true);
     }
     else if (qs->isPendingReview()) {
         status = "Under Review";
