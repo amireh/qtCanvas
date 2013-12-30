@@ -59,3 +59,8 @@ else
   echo "running macdeployqt..."
 	macdeployqt ${BUNDLE}
 fi
+
+echo "Updating version strings in Info.plist"
+VERSION=$(grep 'VERSION\s*=' ../qtCanvas.pro | awk '{print $3}')
+echo "  Version: ${VERSION}"
+perl -p -i -e "s/\@VERSION\@/${VERSION}/g" ${BUNDLE}/Contents/Info.plist

@@ -16,12 +16,24 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 QMAKE_CXXFLAGS += -std=c++0x
 
 macx {
+    BUNDLE_DIR = $${BIN_DIRECTORY}/$${TARGET}.app
+
     QMAKE_MACOSX_DEPLOYMENT_TARGET = 10.9
     QMAKE_CXXFLAGS += -stdlib=libc++
     LIBPATH += /usr/local/lib
     INCLUDEPATH += /usr/local/include # for libcanvas / libjsoncpp
 
-    ICON = qtCanvas/resources/icons/canvas.icns
+    ICON = $$PWD/resources/icons/canvas.icns
+    QMAKE_INFO_PLIST = $$PWD/resources/Info.plist
+    QMAKE_INFO_PLIST_OUT = $${BUNDLE_DIR}/Contents/Info.plist
+
+    PRE_TARGETDEPS += $${BIN_DIRECTORY}
+
+    missing.target = dummy
+    missing.depends = $${BUNDLE_DIR}/Contents/Info.plist $${BUNDLE_DIR}/Contents/Resources/canvas.icns
+
+    QMAKE_EXTRA_TARGETS = missing
+    QMAKE_PRE_LINK = make dummy
 }
 
 win32 {
