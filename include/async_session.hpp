@@ -30,7 +30,8 @@ class RequestThread : public QThread, public Canvas::Logger {
 public:
     RequestThread(AsyncSession *s,
                   Canvas::String const inUri,
-                  Canvas::Session::RC_GET);
+                  Canvas::Session::RC_GET,
+                  QMutex&);
     virtual ~RequestThread();
 
     void run() Q_DECL_OVERRIDE;
@@ -38,6 +39,7 @@ public:
     AsyncSession *mSession;
     Canvas::String const mUri;
     Canvas::Session::RC_GET mCallback;
+    QMutex &mMutex;
 signals:
     void done(bool,
               Canvas::HTTP::Response const&,

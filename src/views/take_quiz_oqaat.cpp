@@ -5,6 +5,7 @@
 TakeQuizOQAAT::TakeQuizOQAAT(QWidget *parent)
     : TakeQuiz(parent),
       mCursor(0),
+      mQuestion(nullptr),
       mSinkWidget(new QWidget(0)),
       mSinkLayout(new QHBoxLayout(mSinkWidget)),
       mNextButton(nullptr),
@@ -17,6 +18,7 @@ TakeQuizOQAAT::~TakeQuizOQAAT()
     delete mSinkLayout;
     mSinkWidget = nullptr;
     mSinkLayout = nullptr;
+    mQuestion = nullptr;
 }
 
 void TakeQuizOQAAT::setup()
@@ -24,6 +26,7 @@ void TakeQuizOQAAT::setup()
     TakeQuiz::setup();
 
     mCursor = -1;
+    mQuestion = nullptr;
 
     connect(mQuestionIndex, SIGNAL(questionFocused(const QuizQuestion*,QuestionWidget*)),
             this, SLOT(requestFocusQuestion(const QuizQuestion*,QuestionWidget*)));
@@ -40,7 +43,28 @@ void TakeQuizOQAAT::prevQuestion()
 
 void TakeQuizOQAAT::nextQuestion()
 {
-    QuizQuestion *question = locateNextQuestion(&mCursor);
+    QuizQuestion *question;
+
+    if (mQuestion && mQuiz->cantGoBack() && !mQuestion->isAnswered()) {
+        QMessageBox confirmation;
+        int confirmationRc;
+
+        confirmation.setIcon(QMessageBox::Question);
+        confirmation.setText("Your answer is missing.");
+        confirmation.setInformativeText(
+                    QString("%1 %2")
+                    .arg("You can not go back to this question once")
+                    .arg("you move to the next one. \n\nAre you sure you want to proceed?"));
+        confirmation.setStandardButtons(QMessageBox::Yes | QMessageBox::Cancel);
+        confirmation.setDefaultButton(QMessageBox::Yes);
+        confirmationRc = confirmation.exec();
+
+        if (confirmationRc != QMessageBox::Yes) {
+            return;
+        }
+    }
+
+    question = locateNextQuestion(&mCursor);
 
     if (question) {
         focusQuestion(question);
@@ -82,7 +106,7 @@ void TakeQuizOQAAT::renderQuestions()
 void TakeQuizOQAAT::renderActions(QHBoxLayout *btnLayout)
 {
     if (!mQuiz->cantGoBack()) {
-        mPrevButton = new QPushButton(tr("Previous"), this);
+        mPrevButton = new QPushButton(tr("&Previous"), this);
         mPrevButton->setEnabled(false);
 
         btnLayout->addWidget(mPrevButton, 0, Qt::AlignLeft);
@@ -90,7 +114,7 @@ void TakeQuizOQAAT::renderActions(QHBoxLayout *btnLayout)
         connect(mPrevButton, SIGNAL(released()), this, SLOT(prevQuestion()));
     }
 
-    mNextButton = new QPushButton(tr("Next"), this);
+    mNextButton = new QPushButton(tr("&Next"), this);
     mNextButton->setDefault(true);
     mNextButton->setEnabled(false);
 
@@ -161,6 +185,8 @@ void TakeQuizOQAAT::focusQuestion(QuizQuestion* question, bool broadcast)
 
         mCursor = cursor;
     }
+
+    mQuestion = question;
 
     debug() << "Focusing QuizQuestion@" << mCursor;
 

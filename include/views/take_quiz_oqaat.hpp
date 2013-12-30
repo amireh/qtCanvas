@@ -152,6 +152,12 @@ protected:
     int mCursor;
 
     /**
+     * @property mQuestion
+     * The focused question.
+     */
+    QuizQuestion *mQuestion;
+
+    /**
      * @property mSinkWidget
      * Questions that are out of focus are "sinked" into this invisible widget.
      */

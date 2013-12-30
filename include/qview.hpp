@@ -14,6 +14,7 @@ public:
 
 protected:
     virtual void setStatus(QString const&);
+    virtual void reportError(QString const& message, QString type = "");
 };
 
 #endif // QVIEW_HPP

@@ -8,12 +8,13 @@ using namespace Canvas::HTTP;
 
 RequestThread::RequestThread(AsyncSession *session,
                              String const uri,
-                             Canvas::Session::RC_GET callback) :
+                             Canvas::Session::RC_GET callback, QMutex &mtx) :
     QThread(session),
     Logger("RequestThread"),
     mSession(session),
     mUri(uri),
-    mCallback(callback)
+    mCallback(callback),
+    mMutex(mtx)
 {
 }
 
@@ -22,13 +23,28 @@ RequestThread::~RequestThread()
 }
 
 void RequestThread::run() {
+    mMutex.lock();
+
     auto notify = [&](bool success, Response const &response) {
-        emit done(success, response, QString::fromStdString(mUri), mCallback);
+        try {
+            emit done(success, response, QString::fromStdString(mUri), mCallback);
+        } catch(std::exception const &e) {
+            mMutex.unlock();
+            throw e;
+        }
+
+        mMutex.unlock();
     };
 
-    debug() << "Requesting: " << mUri;
-    debug() << "Session address: " << mSession;
-    mSession->basePerformRequest(mUri, notify);
+
+    try {
+        debug() << "Requesting: " << mUri;
+
+        mSession->basePerformRequest(mUri, notify);
+    } catch(std::exception const &e) {
+        mMutex.unlock();
+        throw e;
+    }
 }
 
 AsyncSession::AsyncSession() : Session()
@@ -44,8 +60,6 @@ void AsyncSession::notify(bool success,
                           QString uri,
                           Session::RC_GET callback)
 {
-//    mRequestMutex.unlock();
-
     debug() << "[" << response.status << "] "
             << uri.toStdString()
             << "(" << response.body.size() << " bytes)";
@@ -57,17 +71,10 @@ bool AsyncSession::performRequest(const String &uri, RC_GET callback)
 {
     RequestThread *requestThread;
 
-    mRequestMutex.lock();
-
-    debug() << "dispatching request from: " << QThread::currentThread();
-
-    requestThread = new RequestThread(this, uri, callback);
+    requestThread = new RequestThread(this, uri, callback, mRequestMutex);
 
     connect(requestThread, &RequestThread::done, this, &AsyncSession::notify);
-    connect(requestThread, &RequestThread::finished, [&, requestThread]() {
-        mRequestMutex.unlock();
-        requestThread->deleteLater();
-    });
+    connect(requestThread, &RequestThread::finished, requestThread, &QObject::deleteLater);
 
     requestThread->start();
 
@@ -76,6 +83,5 @@ bool AsyncSession::performRequest(const String &uri, RC_GET callback)
 
 void AsyncSession::basePerformRequest(const Canvas::String &uri, Session::RC_GET callback)
 {
-    debug() << "Actually performing request now:" << uri;
     Session::performRequest(uri, callback);
 }

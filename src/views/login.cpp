@@ -20,25 +20,23 @@ void Login::on_btnLogin_clicked()
 {
     Canvas::Session &session = State::singleton().getSession();
     Canvas::Student &student = State::singleton().getStudent();
-    Viewport &viewport = Viewport::singleton();
 
-    viewport.setStatus(tr("Authenticating..."));
+    setStatus(tr("Authenticating..."));
 
     debug() << "authentication token:"
             << ui->txtToken->text().toStdString();
 
     student.setApiToken(ui->txtToken->text().toStdString());
     session.authenticate(student);
+
     student.loadIdentity(session, [&](bool success) {
-        viewport.setStatus(tr("Authentication ") + tr(success ? "succeeded." : "failed"));
+        setStatus(tr("Authentication ") + tr(success ? "succeeded." : "failed"));
 
         if (success) {
-            viewport.transition("AvailableQuizzes");
+            Viewport::singleton().transition("AvailableQuizzes");
         }
         else {
-            Viewport::singleton().errorDialog()->showMessage(
-                        tr("Authentication failed."),
-                        "authentication_error");
+            reportError(tr("Authentication failed."), "authentication_error");
         }
     });
 }

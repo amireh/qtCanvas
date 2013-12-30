@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QTreeWidget>
 #include <QDateTime>
+#include <QTimer>
 #include <canvas/resources/course.hpp>
 #include <canvas/resources/quiz.hpp>
 #include <canvas/resources/quiz_submission.hpp>
@@ -26,11 +27,15 @@ public:
     virtual void cleanup();
 
 signals:
-    void courseLoaded(Canvas::Course const&);
-    void quizLoaded(Canvas::Quiz const&);
-    void quizSubmissionLoaded(Canvas::QuizSubmission const&);
+    void coursesLoaded();
+    void courseLoaded(Canvas::Course *);
+    void quizLoaded(Canvas::Quiz *);
+    void quizzesLoaded(Canvas::Course*);
+    void quizSubmissionLoaded(Canvas::QuizSubmission *);
 
 private slots:
+    void addCourses();
+
     /**
      * @brief addCourse
      * Look up, or create if necessary, a tree item to represent the course.
@@ -41,13 +46,13 @@ private slots:
      *
      * @return The course tree item.
      */
-    QTreeWidgetItem* addCourse(Canvas::Course const&, bool skipTest = false);
+    QTreeWidgetItem* addCourse(Canvas::Course *, bool skipTest = false);
 
     /**
      * @brief addQuiz
      * Add a tree-item to represent the quiz.
      */
-    void addQuiz(Canvas::Quiz const&);
+    void addQuiz(Canvas::Quiz *);
 
     /**
      * @brief reset
@@ -66,21 +71,21 @@ private slots:
      * @brief loadCourseQuizzes
      * Load the quizzes for each course once it gets loaded.
      */
-    void loadCourseQuizzes(Canvas::Course const&);
+    void loadCourseQuizzes(Canvas::Course *);
 
     /**
      * @brief loadQuizSubmission
      * Load the QS for the newly-loaded quiz, if any.
      */
-    void loadQuizSubmission(Canvas::Quiz const&);
+    void loadQuizSubmission(Canvas::Quiz *);
 
     /**
      * @brief updateQuizStatus
      * Update the UI to show the Quiz "taking" status; whether a QS is active,
      * complete, or doesn't exist.
      */
-    void updateQuizStatus(Canvas::Quiz const&);
-    void updateQuizStatus(Canvas::QuizSubmission const&);
+    void updateQuizStatus(Canvas::Quiz *);
+    void updateQuizStatus(Canvas::QuizSubmission *);
 
     /**
      * @brief takeQuiz
@@ -90,8 +95,8 @@ private slots:
 
 private:
     Ui::AvailableQuizzes *ui;
-    QTreeWidgetItem* courseTreeItem(Canvas::Course const&);
-    QTreeWidgetItem* quizTreeItem(Canvas::Quiz const&);
+    QTreeWidgetItem* courseTreeItem(Canvas::Course const*);
+    QTreeWidgetItem* quizTreeItem(Canvas::Quiz const*);
 
     qint64 timestampToSeconds(Canvas::String const&) const;
     QString humanReadableTime(qint64 seconds) const;
